@@ -1,20 +1,13 @@
-import sys
-
 flag = False
+filename = 'ttj006f391.dat'
 
-g = open('recos.txt', 'w')
-
-for line in open(sys.argv[1]):
+lines = []
+for line in open(filename):
 	if line.strip() == 'EndReco': flag = False
-	if flag: g.write(line)
+	if flag: lines.append(line[1:-1])
 	if line.strip() == 'BeginReco': flag = True
-g.close()
 
 #--------------------------------------------------------
-
-f = open('recos.txt')
-lines = [l[1:-1] for l in f.readlines()]
-f.close()
 
 curr_event = ''
 events = []
