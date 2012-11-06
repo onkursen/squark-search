@@ -1,0 +1,84 @@
+//correct energy to 8 TeV
+generate from gg => stop stop at 8 TeV
+see if I can invoke jet-finding algorithms and find jets
+learn boosted decision trees
+general background in machine learning
+
+neutralino: lighest supersymmetric partner (chi tilde)
+renormalization is like telescoping series cancelling
+supersymmetry is more of term-by-term cancellation
+fine-tuning problem
+
+ken kennedy institute
+
+pythia jets
+	http://home.thep.lu.se/~torbjorn/pythia/lutp0613man2.pdf
+	celljet: http://home.thep.lu.se/~torbjorn/php8162/EventAnalysis.php
+		save # jets and their energies to a file
+		use root to plot them up (root = data visualization and analysis)
+		start to create variables in phenomenological paper
+	week from now: guy from a&m
+		data files
+	write the proposal and send to Padley
+	crackpot index
+
+
+Root:
+	explore decision trees
+	will adapt to real analysis, but doesn't have diagnostics of WECA	
+WECA:
+	Java, machine-learning techniques
+
+
+bonner-gw: head node; USE THIS FOR FILE COPYING
+bonner-c1, bonner-c2, ..., bonner-c6: use this for regular work
+
+pull
+	onkursen@ccp.knu.ac.kr:/home/kechen/research2012/8TeV_txt/
+	into
+	os2@bonner-gw.rice.edu:/home/cms2/onkur
+also pull
+	t t-bar plus jets, onkursen@ccp.knu.ac.kr:/x1/data/nkolev/project10/output/ttjPP/*.dat
+email padley once some stuff has been pulled
+
+
+one file
+only rco portion
+graph energy distribution of jets only
+in root
+
+
+
+PT = sqrt(px^2+py^2); beam in z direction
+
+There are 6 jets in the all-hadronic channel: 2 b-tagged, 4 untagged
+This is because:
+t => b + W
+W => jj
+so t => bjj
+
+To separate the signal into two systems:
+	bjj combination with largest PT
+	bjj ccombination with 2nd largest PT
+	calculate M3 for both
+	calculate M2 for both
+	Combined chi-squared test: M3 => t, M2 => W
+	Choose better combination and assign to top quark A
+Rest of hte system is top quark B
+
+
+October 23, 2012:
+	ROOT Plots of M3 of top quark A across multiple events
+	ROOT Plots of M2 of top quark A across multiple events
+	ROOT Plots of M3 of top quark B across multiple events
+	ROOT Plots of M2 of top quark B across multiple events
+
+	for both SUSY and tt-jet events
+	with the stipulation that: need to record at least two definite b tags; otherwise, discard the event
+
+
+
+October 30, 2012:
+	for system B, take only bottom + 2 best jets
+	do plots for multiple susy files
+	plots for Angular and MT Cuts
