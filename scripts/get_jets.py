@@ -211,10 +211,5 @@ write_file('output/angles_b.txt', b_angles)
 write_file('output/angles_j1.txt', j1_angles)
 write_file('output/angles_j2.txt', j2_angles)
 
-print 'Length of M3A', len(M3A)
-print 'Length of M2A', len(M2A)
-print 'Length of M3B', len(M3B)
-print 'Length of M2B', len(M2B)
-
 # combine plots into one tar file
 # os.system("tar cf plots.tar *.txt && rm *.txt")
