@@ -95,17 +95,15 @@ def get_best_bjj(bottoms, jets, top_system):
   err1, err2 = top_W_error(M3_1, M2_1), top_W_error(M3_2, M2_2)
   current_system = [M3A,M2A] if top_system == 'A' else [M3B,M2B]
   if err1 <= err2:
-    return first, M3_1, M2_1
-    # best_top = first 
-    # current_system[0].append(M3_1)
-    # current_system[1].append(M2_1)
+    best_top = first 
+    current_system[0].append(M3_1)
+    current_system[1].append(M2_1)
   else:
-    return second, M3_2, M2_2
-    # best_top = second
-    # current_system[0].append(M3_2)
-    # current_system[1].append(M2_2)
+    best_top = second
+    current_system[0].append(M3_2)
+    current_system[1].append(M2_2)
 
-  # return best_top
+  return best_top
 
 all_files = []; curr_file = []
 read_flag = False
@@ -164,20 +162,14 @@ for n in range(len(all_files)):
   # BEST BJJ COMBO = TOP QUARK A
   # BEST BJJ COMBO FROM REMAINING JETS = TOP QUARK B
   # -----------------------------------
-  topA, m3_topA, m2_topA = get_best_bjj(bottoms, jets, 'A');
+  topA = get_best_bjj(bottoms, jets, 'A');
   if not topA: continue
 
   # Remove bjj of A from the set of bottoms and jets to consider for system B
   bottoms2 = [x for x in bottoms if x != topA[1]]
   jets2 = [x for x in jets if x not in topA[2:]]
-  print type(bottoms2), type(jets2)
-  topB, m3_topB, m2_topB = get_best_bjj(bottoms2, jets2, 'B')
+  topB = get_best_bjj(bottoms2, jets2, 'B')
   if not topB: continue
-
-  M3A.append(m3_topA)
-  M2A.append(m2_topA)
-  M3B.append(m3_topB)
-  M2B.append(m2_topB)
 
   # -----------------------------------
   # AZIMUTHAL ANGLE CUTS
