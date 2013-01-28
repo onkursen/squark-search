@@ -82,3 +82,24 @@ October 30, 2012:
 	for system B, take only bottom + 2 best jets
 	do plots for multiple susy files
 	plots for Angular and MT Cuts
+
+November 6, 2012:
+	Delta phi between b_B and missing transverse energy =
+		x-y angle between momentum of bottom quark and momentum corresponding to missing transverse energy
+		how to calculate the latter?
+			sum up transverse momentum components of ALL events in the collision
+			theoretically should be 0, but it won't be.
+			take the negative of that (for missing); that's your missing trasverse momentum vector
+
+	Transverse mass is defined on wikipedia
+		http://en.wikipedia.org/wiki/Transverse_mass
+
+	david scott, prof of statistics, wrote the book on kernel density estimation
+
+
+November 20, 2012:
+	Label which susy point used
+	angle plots for multiple susy points
+	Throw everything into a BDT
+	Email Kuver with question about whether different files correspond to different data points
+		Padley: could be different Monte Carlo simulations of the same susy point
