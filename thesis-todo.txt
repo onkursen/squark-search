@@ -103,3 +103,16 @@ November 20, 2012:
 	Throw everything into a BDT
 	Email Kuver with question about whether different files correspond to different data points
 		Padley: could be different Monte Carlo simulations of the same susy point
+
+January 28, 2013:
+	Add to bdt:
+		missing E_T 
+		azimuthal angles
+	Take a closer look at the individual decision trees
+	Make sure same number of A and B events
+	Write up outline in Powerpoint
+	Post code on github
+
+	dartmouth is removing all ap credit
+	rice and smu keep backups of each others stuff
+	inverse corrolations bewteen family financial support and success

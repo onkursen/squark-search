@@ -27,6 +27,8 @@ print 'NTuple prepared to be fed into BDT'
 
 # ------------------------------------
 # CREATE AND TRAIN BDT USING ROOT TMVA
+# Code taken from: 
+# http://aholzner.wordpress.com/2011/08/27/a-tmva-example-in-pyroot/
 # ------------------------------------
 
 fout = ROOT.TFile("test.root","RECREATE")
