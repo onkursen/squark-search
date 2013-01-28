@@ -96,16 +96,16 @@ ROOT.hSig.SetLineColor(ROOT.kRed); ROOT.hSig.SetLineWidth(2)  # signal histogram
 ROOT.hBg.SetLineColor(ROOT.kBlue); ROOT.hBg.SetLineWidth(2)   # background histogram
 
 # use a THStack to show both histograms
-hs = ROOT.THStack("hs","Signal vs. Background")
+hs = ROOT.THStack("hs","Signal (Red) vs. Background (Blue)")
 hs.Add(ROOT.hSig)
 hs.Add(ROOT.hBg)
 hs.Draw()
 
-legend = ROOT.TLegend(0.4,0.6,0.89,0.89); 
-legend.AddEntry(ROOT.hSig,"Signal")
-legend.AddEntry(ROOT.hBg,"Background")
-legend.Draw()
+# legend = ROOT.TLegend(0.4,0.6,0.89,0.89); 
+# legend.AddEntry(ROOT.hSig,"Signal")
+# legend.AddEntry(ROOT.hBg,"Background")
+# legend.Draw()
 
-c1.SaveAs("bdt.png")
+c1.SaveAs("plots/bdt.png")
 
 raw_input("Press any key to close")
