@@ -1,4 +1,5 @@
 import ROOT
+from time import strftime, localtime
 
 # ------------------------------------
 # PREPARE DATA TO BE FED INTO BDT
@@ -6,42 +7,46 @@ import ROOT
 
 def to_float_array(filename):
   return map(float, 
-    open('%s.txt' % filename).read().split('\n')[:-1])
+    open(filename).read().split('\n')[:-1])
 
 # read files contained in `variables` array and append them
 # to signal and background lists
-variables = ['m3a', 'm2a', 'm3b', 'm2b']
+variables = ['m3a', 'm2a', 'm3b', 'm2b', 'angles_b', 'angles_j1', 'angles_j2']
 susy = []; ttj = [];
 for v in variables:
-  susy.append(to_float_array('output/output_susy/%s' % v))
-  ttj.append(to_float_array('output/output_ttj/%s' % v))
+  susy.append(to_float_array('output/output_susy/%s.txt' % v))
+  ttj.append(to_float_array('output/output_ttj/%s.txt' % v))
 
 # fill ROOT nTuple with signal and background variables
-ntuple = ROOT.TNtuple("ntuple","ntuple","m3a:m2a:m3b:m2b:signal")
-for i in range(min(len(susy[0]), len(susy[2]))):
-  ntuple.Fill(susy[0][i], susy[1][i], susy[2][i], susy[3][i], 1)
-for i in range(min(len(ttj[0]), len(ttj[2]))):
-  ntuple.Fill(ttj[0][i], ttj[1][i], ttj[2][i], ttj[3][i], 0)
+ntuple = ROOT.TNtuple("ntuple","ntuple","%s:signal" % ':'.join(variables))
+for i in range(min([len(var) for var in susy])):
+  curr = [var[i] for var in susy] + [1] # susy is signal
+  ntuple.Fill(*curr)
+
+for i in range(min([len(var) for var in ttj])):
+  curr = [var[i] for var in ttj] + [0] # ttbar is background
+  ntuple.Fill(*curr)
 
 print 'NTuple prepared to be fed into BDT'
 
-# ------------------------------------
+# -------------------------------------------------------------------
 # CREATE AND TRAIN BDT USING ROOT TMVA
 # Code taken from: 
 # http://aholzner.wordpress.com/2011/08/27/a-tmva-example-in-pyroot/
-# ------------------------------------
+# -------------------------------------------------------------------
 
 fout = ROOT.TFile("test.root","RECREATE")
 
-factory = ROOT.TMVA.Factory("TMVAClassification", fout,
-                            ":".join([
-                                "!V",
-                                "!Silent",
-                                "Color",
-                                "DrawProgressBar",
-                                "Transformations=I;D;P;G,D",
-                                "AnalysisType=Classification"]
-                                     ))
+factory = ROOT.TMVA.Factory(
+  "TMVAClassification", fout,
+  ":".join([
+      "!V",
+      "!Silent",
+      "Color",
+      "DrawProgressBar",
+      "Transformations=I;D;P;G,D",
+      "AnalysisType=Classification"]
+           ))
 
 for v in variables:
   factory.AddVariable(v,"F")
@@ -53,35 +58,38 @@ factory.AddBackgroundTree(ntuple)
 sigCut = ROOT.TCut("signal > 0.5")
 bgCut = ROOT.TCut("signal <= 0.5")
 
-factory.PrepareTrainingAndTestTree(sigCut,   # signal events
-                                   bgCut,    # background events
-                                   ":".join([
-                                        "nTrain_Signal=0",
-                                        "nTrain_Background=0",
-                                        "SplitMode=Random",
-                                        "NormMode=NumEvents",
-                                        "!V"
-                                       ]))
+factory.PrepareTrainingAndTestTree(
+  sigCut,   # signal events
+  bgCut,    # background events
+  ":".join([
+      "nTrain_Signal=0",
+      "nTrain_Background=0",
+      "SplitMode=Random",
+      "NormMode=NumEvents",
+      "!V"
+     ]))
 
-method = factory.BookMethod(ROOT.TMVA.Types.kBDT, "BDT",
-                   ":".join([
-                       "!H",
-                       "!V",
-                       "NTrees=850",
-                       "nEventsMin=150",
-                       "MaxDepth=3",
-                       "BoostType=AdaBoost",
-                       "AdaBoostBeta=0.5",
-                       "SeparationType=GiniIndex",
-                       "nCuts=20",
-                       "PruneMethod=NoPruning",
-                       ]))
+method = factory.BookMethod(
+  ROOT.TMVA.Types.kBDT,
+  "BDT",
+  ":".join([
+     "!H",
+     "!V",
+     "NTrees=850",
+     "nEventsMin=150",
+     "MaxDepth=3",
+     "BoostType=AdaBoost",
+     "AdaBoostBeta=0.5",
+     "SeparationType=GiniIndex",
+     "nCuts=20",
+     "PruneMethod=NoPruning",
+     ]))
 
 factory.TrainAllMethods()
 factory.TestAllMethods()
 factory.EvaluateAllMethods()
 
-print 'BDTs trained'
+print 'BDTs trained using ROOT TMVA'
 
 # ------------------------------------
 # PLOT HISTOGRAM OF SIGNAL VS. BACKGROUND 
@@ -98,7 +106,7 @@ ROOT.hSig.SetLineColor(ROOT.kRed); ROOT.hSig.SetLineWidth(2)  # signal histogram
 ROOT.hBg.SetLineColor(ROOT.kBlue); ROOT.hBg.SetLineWidth(2)   # background histogram
 
 # use a THStack to show both histograms
-hs = ROOT.THStack("hs","Signal (Red) vs. Background (Blue)")
+hs = ROOT.THStack("hs","SUSY Signal (Red) vs. ttj Background (Blue)")
 hs.Add(ROOT.hSig)
 hs.Add(ROOT.hBg)
 hs.Draw()
@@ -108,6 +116,6 @@ hs.Draw()
 # legend.AddEntry(ROOT.hBg,"Background")
 # legend.Draw()
 
-c1.SaveAs("plots/bdt.png")
+c1.SaveAs("plots/bdt %s.png" % strftime("%Y-%m-%d %H:%M:%S", localtime()))
 
 raw_input("Press any key to close")

@@ -1,0 +1,329 @@
+NTuple prepared to be fed into BDT
+--- Factory                  : You are running ROOT Version: 5.34/04, Jan 10, 2013
+--- Factory                  : 
+--- Factory                  : _/_/_/_/_/ _|      _|  _|      _|    _|_|   
+--- Factory                  :    _/      _|_|  _|_|  _|      _|  _|    _| 
+--- Factory                  :   _/       _|  _|  _|  _|      _|  _|_|_|_| 
+--- Factory                  :  _/        _|      _|    _|  _|    _|    _| 
+--- Factory                  : _/         _|      _|      _|      _|    _| 
+--- Factory                  : 
+--- Factory                  : ___________TMVA Version 4.1.4, Dec 04, 2012
+--- Factory                  : 
+--- DataSetInfo              : Added class "Signal"	 with internal class number 0
+--- Factory                  : Add Tree ntuple of type Signal with 5149 events
+--- DataSetInfo              : Added class "Background"	 with internal class number 1
+--- Factory                  : Add Tree ntuple of type Background with 5149 events
+--- Factory                  : Preparing trees for training and testing...
+--- Factory                  : Booking method: [1mBDT[0m
+--- DataSetFactory           : Splitmode is: "RANDOM" the mixmode is: "SAMEASSPLITMODE"
+--- DataSetFactory           : Create training and testing trees -- looping over class "Signal" ...
+--- DataSetFactory           : Weight expression for class 'Signal': ""
+--- DataSetFactory           : Create training and testing trees -- looping over class "Background" ...
+--- DataSetFactory           : Weight expression for class 'Background': ""
+--- DataSetFactory           : Number of events in input trees (after possible flattening of arrays):
+--- DataSetFactory           :     Signal          -- number of events       : 5149   / sum of weights: 5149 
+--- DataSetFactory           :     Background      -- number of events       : 5149   / sum of weights: 5149 
+--- DataSetFactory           :     Signal     tree -- total number of entries: 5149 
+--- DataSetFactory           :     Background tree -- total number of entries: 5149 
+--- DataSetFactory           : Preselection: (will effect number of requested training and testing events)
+--- DataSetFactory           :     Signal     requirement: "signal > 0.5"
+--- DataSetFactory           :     Signal          -- number of events passed: 2302   / sum of weights: 2302 
+--- DataSetFactory           :     Signal          -- efficiency             : 0.447077
+--- DataSetFactory           :     Background requirement: "signal <= 0.5"
+--- DataSetFactory           :     Background      -- number of events passed: 2847   / sum of weights: 2847 
+--- DataSetFactory           :     Background      -- efficiency             : 0.552923
+--- DataSetFactory           : Weight renormalisation mode: "NumEvents": renormalise independently the ...
+--- DataSetFactory           : ... class weights so that Sum[i=1..N_j]{w_i} = N_j, j=0,1,2...
+--- DataSetFactory           : ... (note that N_j is the sum of training and test events)
+--- DataSetFactory           : --> Rescale Signal     event weights by factor: 1
+--- DataSetFactory           : --> Rescale Background event weights by factor: 1
+--- DataSetFactory           : Number of training and testing events after rescaling:
+--- DataSetFactory           : ------------------------------------------------------
+--- DataSetFactory           : Signal     -- training events            : 1151 (sum of weights: 1151) - requested were 0 events
+--- DataSetFactory           : Signal     -- testing events             : 1151 (sum of weights: 1151) - requested were 0 events
+--- DataSetFactory           : Signal     -- training and testing events: 2302 (sum of weights: 2302)
+--- DataSetFactory           : Signal     -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.447077
+--- DataSetFactory           : Background -- training events            : 1423 (sum of weights: 1423) - requested were 0 events
+--- DataSetFactory           : Background -- testing events             : 1423 (sum of weights: 1423) - requested were 0 events
+--- DataSetFactory           : Background -- training and testing events: 2846 (sum of weights: 2846)
+--- DataSetFactory           : Background -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.552923
+--- DataSetFactory           : Create internal training tree
+--- DataSetFactory           : Create internal testing tree
+--- DataSetInfo              : Correlation matrix (Signal):
+--- DataSetInfo              : -----------------------------------------------------------------------
+--- DataSetInfo              :                m3a     m2a     m3b     m2b angles_b angles_j1 angles_j2
+--- DataSetInfo              :       m3a:  +1.000  +0.918  +0.034  +0.044   -0.037    +0.042    +0.092
+--- DataSetInfo              :       m2a:  +0.918  +1.000  +0.033  +0.039   -0.032    +0.045    +0.081
+--- DataSetInfo              :       m3b:  +0.034  +0.033  +1.000  +0.662   +0.053    -0.069    -0.034
+--- DataSetInfo              :       m2b:  +0.044  +0.039  +0.662  +1.000   -0.049    -0.072    -0.033
+--- DataSetInfo              :  angles_b:  -0.037  -0.032  +0.053  -0.049   +1.000    +0.063    -0.026
+--- DataSetInfo              : angles_j1:  +0.042  +0.045  -0.069  -0.072   +0.063    +1.000    +0.254
+--- DataSetInfo              : angles_j2:  +0.092  +0.081  -0.034  -0.033   -0.026    +0.254    +1.000
+--- DataSetInfo              : -----------------------------------------------------------------------
+--- DataSetInfo              : Correlation matrix (Background):
+--- DataSetInfo              : -----------------------------------------------------------------------
+--- DataSetInfo              :                m3a     m2a     m3b     m2b angles_b angles_j1 angles_j2
+--- DataSetInfo              :       m3a:  +1.000  +0.878  +0.016  +0.028   -0.027    -0.054    -0.039
+--- DataSetInfo              :       m2a:  +0.878  +1.000  -0.007  +0.022   -0.029    -0.047    -0.018
+--- DataSetInfo              :       m3b:  +0.016  -0.007  +1.000  +0.524   -0.061    -0.018    -0.029
+--- DataSetInfo              :       m2b:  +0.028  +0.022  +0.524  +1.000   +0.024    -0.074    -0.086
+--- DataSetInfo              :  angles_b:  -0.027  -0.029  -0.061  +0.024   +1.000    +0.136    +0.096
+--- DataSetInfo              : angles_j1:  -0.054  -0.047  -0.018  -0.074   +0.136    +1.000    +0.626
+--- DataSetInfo              : angles_j2:  -0.039  -0.018  -0.029  -0.086   +0.096    +0.626    +1.000
+--- DataSetInfo              : -----------------------------------------------------------------------
+--- DataSetFactory           :  
+--- Factory                  : 
+--- Factory                  : current transformation string: 'I'
+--- Factory                  : Create Transformation "I" with events from all classes.
+--- Id                       : Transformation, Variable selection : 
+--- Id                       : Input : variable 'm3a' (index=0).   <---> Output : variable 'm3a' (index=0).
+--- Id                       : Input : variable 'm2a' (index=1).   <---> Output : variable 'm2a' (index=1).
+--- Id                       : Input : variable 'm3b' (index=2).   <---> Output : variable 'm3b' (index=2).
+--- Id                       : Input : variable 'm2b' (index=3).   <---> Output : variable 'm2b' (index=3).
+--- Id                       : Input : variable 'angles_b' (index=4).   <---> Output : variable 'angles_b' (index=4).
+--- Id                       : Input : variable 'angles_j1' (index=5).   <---> Output : variable 'angles_j1' (index=5).
+--- Id                       : Input : variable 'angles_j2' (index=6).   <---> Output : variable 'angles_j2' (index=6).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'D'
+--- Factory                  : Create Transformation "D" with events from all classes.
+--- Deco                     : Transformation, Variable selection : 
+--- Deco                     : Input : variable 'm3a' (index=0).   <---> Output : variable 'm3a' (index=0).
+--- Deco                     : Input : variable 'm2a' (index=1).   <---> Output : variable 'm2a' (index=1).
+--- Deco                     : Input : variable 'm3b' (index=2).   <---> Output : variable 'm3b' (index=2).
+--- Deco                     : Input : variable 'm2b' (index=3).   <---> Output : variable 'm2b' (index=3).
+--- Deco                     : Input : variable 'angles_b' (index=4).   <---> Output : variable 'angles_b' (index=4).
+--- Deco                     : Input : variable 'angles_j1' (index=5).   <---> Output : variable 'angles_j1' (index=5).
+--- Deco                     : Input : variable 'angles_j2' (index=6).   <---> Output : variable 'angles_j2' (index=6).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'P'
+--- Factory                  : Create Transformation "P" with events from all classes.
+--- PCA                      : Transformation, Variable selection : 
+--- PCA                      : Input : variable 'm3a' (index=0).   <---> Output : variable 'm3a' (index=0).
+--- PCA                      : Input : variable 'm2a' (index=1).   <---> Output : variable 'm2a' (index=1).
+--- PCA                      : Input : variable 'm3b' (index=2).   <---> Output : variable 'm3b' (index=2).
+--- PCA                      : Input : variable 'm2b' (index=3).   <---> Output : variable 'm2b' (index=3).
+--- PCA                      : Input : variable 'angles_b' (index=4).   <---> Output : variable 'angles_b' (index=4).
+--- PCA                      : Input : variable 'angles_j1' (index=5).   <---> Output : variable 'angles_j1' (index=5).
+--- PCA                      : Input : variable 'angles_j2' (index=6).   <---> Output : variable 'angles_j2' (index=6).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'G,D'
+--- Factory                  : Create Transformation "G" with events from all classes.
+--- Gauss                    : Transformation, Variable selection : 
+--- Gauss                    : Input : variable 'm3a' (index=0).   <---> Output : variable 'm3a' (index=0).
+--- Gauss                    : Input : variable 'm2a' (index=1).   <---> Output : variable 'm2a' (index=1).
+--- Gauss                    : Input : variable 'm3b' (index=2).   <---> Output : variable 'm3b' (index=2).
+--- Gauss                    : Input : variable 'm2b' (index=3).   <---> Output : variable 'm2b' (index=3).
+--- Gauss                    : Input : variable 'angles_b' (index=4).   <---> Output : variable 'angles_b' (index=4).
+--- Gauss                    : Input : variable 'angles_j1' (index=5).   <---> Output : variable 'angles_j1' (index=5).
+--- Gauss                    : Input : variable 'angles_j2' (index=6).   <---> Output : variable 'angles_j2' (index=6).
+--- Factory                  : Create Transformation "D" with events from all classes.
+--- Deco                     : Transformation, Variable selection : 
+--- Deco                     : Input : variable 'm3a' (index=0).   <---> Output : variable 'm3a' (index=0).
+--- Deco                     : Input : variable 'm2a' (index=1).   <---> Output : variable 'm2a' (index=1).
+--- Deco                     : Input : variable 'm3b' (index=2).   <---> Output : variable 'm3b' (index=2).
+--- Deco                     : Input : variable 'm2b' (index=3).   <---> Output : variable 'm2b' (index=3).
+--- Deco                     : Input : variable 'angles_b' (index=4).   <---> Output : variable 'angles_b' (index=4).
+--- Deco                     : Input : variable 'angles_j1' (index=5).   <---> Output : variable 'angles_j1' (index=5).
+--- Deco                     : Input : variable 'angles_j2' (index=6).   <---> Output : variable 'angles_j2' (index=6).
+--- Id                       : Preparing the Identity transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        :  Variable         Mean         RMS   [        Min         Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        :       m3a:     287.43     184.05   [     65.322     1731.4 ]
+--- TFHandler_Factory        :       m2a:     171.38     164.42   [     11.744     1598.9 ]
+--- TFHandler_Factory        :       m3b:     219.82     129.66   [     21.345     1560.2 ]
+--- TFHandler_Factory        :       m2b:     89.935     65.758   [     6.5080     605.74 ]
+--- TFHandler_Factory        :  angles_b:     1.5531    0.93095   [ 0.00054167     3.1408 ]
+--- TFHandler_Factory        : angles_j1:     1.4917    0.89201   [ 0.00072419     3.1406 ]
+--- TFHandler_Factory        : angles_j2:     1.5401    0.90695   [  0.0010623     3.1376 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Id
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : test.root:/InputVariables_Id/CorrelationPlots
+--- Deco                     : Preparing the Decorrelation transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        :  Variable         Mean         RMS   [        Min         Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        :       m3a:     1.6644     1.0000   [    0.23672     8.4709 ]
+--- TFHandler_Factory        :       m2a:   0.092558     1.0000   [    -4.0281     7.2188 ]
+--- TFHandler_Factory        :       m3b:     1.4756     1.0000   [   0.067290     12.704 ]
+--- TFHandler_Factory        :       m2b:    0.76176     1.0000   [    -2.9050     8.0800 ]
+--- TFHandler_Factory        :  angles_b:     1.8048     1.0000   [  0.0033702     3.7161 ]
+--- TFHandler_Factory        : angles_j1:     1.3945     1.0000   [   -0.81138     3.7062 ]
+--- TFHandler_Factory        : angles_j2:     1.4934     1.0000   [   -0.78251     3.7950 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Deco
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : test.root:/InputVariables_Deco/CorrelationPlots
+--- PCA                      : Preparing the Principle Component (PCA) transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        :  Variable         Mean         RMS   [        Min         Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        :       m3a:-3.1180e-08     240.95   [    -272.08     2023.2 ]
+--- TFHandler_Factory        :       m2a: 1.3431e-08     135.22   [    -1264.2     229.54 ]
+--- TFHandler_Factory        :       m3b:-1.4773e-08     55.812   [    -395.38     160.23 ]
+--- TFHandler_Factory        :       m2b:-2.3818e-08     50.911   [    -333.32     353.38 ]
+--- TFHandler_Factory        :  angles_b:-9.6321e-10     1.0936   [    -2.8728     2.3776 ]
+--- TFHandler_Factory        : angles_j1: 6.3359e-10    0.91550   [    -1.9543     2.0174 ]
+--- TFHandler_Factory        : angles_j2:-7.5982e-12    0.65720   [    -2.0860     2.0274 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for PCA
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : test.root:/InputVariables_PCA/CorrelationPlots
+--- Gauss                    : Preparing the Gaussian transformation...
+--- Deco                     : Preparing the Decorrelation transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        :  Variable         Mean         RMS   [        Min         Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        :       m3a:  0.0070394     1.0000   [    -6.3582     4.2433 ]
+--- TFHandler_Factory        :       m2a:  0.0081121     1.0000   [    -6.0013     4.2312 ]
+--- TFHandler_Factory        :       m3b:  0.0090169     1.0000   [    -5.6732     6.1241 ]
+--- TFHandler_Factory        :       m2b:  0.0091698     1.0000   [    -5.3678     5.6662 ]
+--- TFHandler_Factory        :  angles_b:   0.013128     1.0000   [    -3.9318     5.7635 ]
+--- TFHandler_Factory        : angles_j1:   0.010566     1.0000   [    -4.1400     6.1021 ]
+--- TFHandler_Factory        : angles_j2:   0.011345     1.0000   [    -3.8389     6.0204 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Gauss_Deco
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : test.root:/InputVariables_Gauss_Deco/CorrelationPlots
+--- TFHandler_Factory        :  
+--- TFHandler_Factory        : Ranking input variables (method unspecific)...
+--- IdTransformation         : Ranking result (top variable is best ranked)
+--- IdTransformation         : ----------------------------------
+--- IdTransformation         : Rank : Variable  : Separation
+--- IdTransformation         : ----------------------------------
+--- IdTransformation         :    1 : m3a       : 1.473e-01
+--- IdTransformation         :    2 : m3b       : 1.461e-01
+--- IdTransformation         :    3 : m2a       : 1.109e-01
+--- IdTransformation         :    4 : m2b       : 7.095e-02
+--- IdTransformation         :    5 : angles_b  : 4.471e-02
+--- IdTransformation         :    6 : angles_j1 : 1.351e-02
+--- IdTransformation         :    7 : angles_j2 : 1.161e-02
+--- IdTransformation         : ----------------------------------
+--- Factory                  :  
+--- Factory                  : Train all methods for Classification ...
+--- Factory                  : Train method: BDT for Classification
+--- TFHandler_BDT            : ----------------------------------------------------------------
+--- TFHandler_BDT            :  Variable         Mean         RMS   [        Min         Max ]
+--- TFHandler_BDT            : ----------------------------------------------------------------
+--- TFHandler_BDT            :       m3a:     287.43     184.05   [     65.322     1731.4 ]
+--- TFHandler_BDT            :       m2a:     171.38     164.42   [     11.744     1598.9 ]
+--- TFHandler_BDT            :       m3b:     219.82     129.66   [     21.345     1560.2 ]
+--- TFHandler_BDT            :       m2b:     89.935     65.758   [     6.5080     605.74 ]
+--- TFHandler_BDT            :  angles_b:     1.5531    0.93095   [ 0.00054167     3.1408 ]
+--- TFHandler_BDT            : angles_j1:     1.4917    0.89201   [ 0.00072419     3.1406 ]
+--- TFHandler_BDT            : angles_j2:     1.5401    0.90695   [  0.0010623     3.1376 ]
+--- TFHandler_BDT            : ----------------------------------------------------------------
+--- BDT                      : Begin training
+--- BDT                      : Training 850 Decision Trees ... patience please
+--- BDT                      : <Train> elapsed time: [1;31m2.25 sec[0m                              
+--- BDT                      : <Train> average number of nodes (w/o pruning) : 10
+--- BDT                      : End of training                                              
+--- BDT                      : Elapsed time for training with 2574 events: [1;31m2.25 sec[0m         
+--- BDT                      : Create MVA output for classification on training sample
+--- BDT                      : Evaluation of BDT on training sample (2574 events)
+--- BDT                      : Elapsed time for evaluation of 2574 events: [1;31m0.396 sec[0m       
+--- BDT                      : Creating weight file in xml format: [0;36mweights/TMVAClassification_BDT.weights.xml[0m
+--- BDT                      : Creating standalone response class: [0;36mweights/TMVAClassification_BDT.class.C[0m
+--- BDT                      : test.root:/Method_BDT/BDT
+--- Factory                  : Training finished
+--- Factory                  : 
+--- Factory                  : Ranking input variables (method specific)...
+--- BDT                      : Ranking result (top variable is best ranked)
+--- BDT                      : -------------------------------------------
+--- BDT                      : Rank : Variable  : Variable Importance
+--- BDT                      : -------------------------------------------
+--- BDT                      :    1 : angles_j1 : 1.608e-01
+--- BDT                      :    2 : m3b       : 1.600e-01
+--- BDT                      :    3 : angles_b  : 1.543e-01
+--- BDT                      :    4 : angles_j2 : 1.441e-01
+--- BDT                      :    5 : m3a       : 1.278e-01
+--- BDT                      :    6 : m2a       : 1.277e-01
+--- BDT                      :    7 : m2b       : 1.252e-01
+--- BDT                      : -------------------------------------------
+--- Factory                  : 
+--- Factory                  : === Destroy and recreate all methods via weight files for testing ===
+--- Factory                  : 
+--- MethodBase               : Reading weight file: [0;36mweights/TMVAClassification_BDT.weights.xml[0m
+--- BDT                      : Read method "BDT" of type "BDT"
+--- BDT                      : MVA method was trained with TMVA Version: 4.1.4
+--- BDT                      : MVA method was trained with ROOT Version: 5.34/04
+--- Factory                  : Test all methods...
+--- Factory                  : Test method: BDT for Classification performance
+--- BDT                      : Evaluation of BDT on testing sample (2574 events)
+--- BDT                      : Elapsed time for evaluation of 2574 events: [1;31m0.359 sec[0m       
+--- Factory                  : Evaluate all methods...
+--- Factory                  : Evaluate classifier: BDT
+--- BDT                      : Loop over test events and fill histograms with classifier response...
+--- Factory                  : Write evaluation histograms to file
+--- TFHandler_BDT            : Plot event variables for BDT
+--- TFHandler_BDT            : ----------------------------------------------------------------
+--- TFHandler_BDT            :  Variable         Mean         RMS   [        Min         Max ]
+--- TFHandler_BDT            : ----------------------------------------------------------------
+--- TFHandler_BDT            :       m3a:     289.35     189.08   [     82.216     2212.6 ]
+--- TFHandler_BDT            :       m2a:     171.20     169.80   [     11.642     2167.2 ]
+--- TFHandler_BDT            :       m3b:     219.38     127.92   [     29.002     1161.1 ]
+--- TFHandler_BDT            :       m2b:     91.301     77.629   [     6.8080     1056.8 ]
+--- TFHandler_BDT            :  angles_b:     1.5907    0.93826   [  0.0039009     3.1397 ]
+--- TFHandler_BDT            : angles_j1:     1.5033    0.88828   [ 0.00038324     3.1413 ]
+--- TFHandler_BDT            : angles_j2:     1.5673    0.90204   [  0.0023098     3.1403 ]
+--- TFHandler_BDT            : ----------------------------------------------------------------
+--- TFHandler_BDT            : Create scatter and profile plots in target-file directory: 
+--- TFHandler_BDT            : test.root:/Method_BDT/BDT/CorrelationPlots
+--- Factory                  : Correlations between input variables and MVA response (signal):
+--- Factory                  : ----------------
+--- Factory                  :                BDT
+--- Factory                  :       m3a:  -0.396
+--- Factory                  :       m2a:  -0.351
+--- Factory                  :       m3b:  -0.430
+--- Factory                  :       m2b:  -0.285
+--- Factory                  :  angles_b:  +0.178
+--- Factory                  : angles_j1:  -0.009
+--- Factory                  : angles_j2:  +0.060
+--- Factory                  : ----------------
+--- Factory                  : 
+--- Factory                  : Correlations between input variables and MVA response (background):
+--- Factory                  : ----------------
+--- Factory                  :                BDT
+--- Factory                  :       m3a:  -0.355
+--- Factory                  :       m2a:  -0.260
+--- Factory                  :       m3b:  -0.471
+--- Factory                  :       m2b:  -0.211
+--- Factory                  :  angles_b:  +0.235
+--- Factory                  : angles_j1:  +0.049
+--- Factory                  : angles_j2:  +0.126
+--- Factory                  : ----------------
+--- Factory                  : 
+--- Factory                  : The following "overlap" matrices contain the fraction of events for which 
+--- Factory                  : the MVAs 'i' and 'j' have returned conform answers about "signal-likeness"
+--- Factory                  : An event is signal-like, if its MVA output exceeds the following value:
+--- Factory                  : --------------------
+--- Factory                  :  Method:  Cut value:
+--- Factory                  : --------------------
+--- Factory                  :     BDT:     -0.011
+--- Factory                  : --------------------
+--- Factory                  : which correspond to the working point: eff(signal) = 1 - eff(background)
+--- Factory                  : 
+--- Factory                  : Evaluation results ranked by best signal efficiency and purity (area)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : MVA              Signal efficiency at bkg eff.(error):       | Sepa-    Signifi- 
+--- Factory                  : Method:          @B=0.01    @B=0.10    @B=0.30    ROC-integ. | ration:  cance:   
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : BDT            : 0.100(08)  0.418(14)  0.725(13)    0.774    | 0.228    0.741
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Testing efficiency compared to training efficiency (overtraining check)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : MVA              Signal efficiency: from test sample (from training sample) 
+--- Factory                  : Method:          @B=0.01             @B=0.10            @B=0.30   
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : BDT            : 0.100 (0.429)       0.418 (0.639)      0.725 (0.808)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : 
+--- Dataset:Default          : Created tree 'TestTree' with 2574 events
+--- Dataset:Default          : Created tree 'TrainTree' with 2574 events
+--- Factory                  :   
+--- Factory                  : [1mThank you for using TMVA![0m
+--- Factory                  : [1mFor citation information, please visit: http://tmva.sf.net/citeTMVA.html[0m
+BDTs trained using ROOT TMVA
+Press any key to close
