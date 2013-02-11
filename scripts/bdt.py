@@ -11,11 +11,11 @@ def to_float_array(filename):
 
 # read files contained in `variables` array and append them
 # to signal and background lists
-variables = ['m3a', 'm2a', 'm3b', 'm2b', 'angles_b', 'angles_j1', 'angles_j2']
+variables = ['m3a', 'm2a', 'm3b', 'm2b', 'angles_b', 'angles_j1', 'angles_j2', 'missing_pT']
 susy = []; ttj = [];
 for v in variables:
-  susy.append(to_float_array('output/output_susy/%s.txt' % v))
-  ttj.append(to_float_array('output/output_ttj/%s.txt' % v))
+  susy.append(to_float_array('output/susy/%s.txt' % v))
+  ttj.append(to_float_array('output/ttj/%s.txt' % v))
 
 # fill ROOT nTuple with signal and background variables
 ntuple = ROOT.TNtuple("ntuple","ntuple","%s:signal" % ':'.join(variables))

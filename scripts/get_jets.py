@@ -108,6 +108,7 @@ N = 0
 
 M3A = []; M2A = []; M3B = []; M2B = []
 b_angles = []; j1_angles = []; j2_angles = []
+MISSING_E = []
 enough_bottoms = 0
 
 # ------------------------------
@@ -193,6 +194,7 @@ for n in range(len(all_files)):
   b_angles.append(angles[0])
   j1_angles.append(angles[1])
   j2_angles.append(angles[2])
+  MISSING_E.append(norm(pT_missing))
 print '%d of %d events had enough bottom quarks' % (enough_bottoms, len(all_files))
 
 # ------------------------------------------------------
@@ -212,7 +214,7 @@ write_file('output/m2b.txt', M2B)
 write_file('output/angles_b.txt', b_angles)
 write_file('output/angles_j1.txt', j1_angles)
 write_file('output/angles_j2.txt', j2_angles)
-write_file('output/missing_pT.txt', pT_missing)
+write_file('output/missing_pT.txt', MISSING_E)
 
 # combine plots into one tar file
 # os.system("tar cf plots.tar *.txt && rm *.txt")
