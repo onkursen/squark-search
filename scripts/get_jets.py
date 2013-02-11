@@ -43,7 +43,7 @@ def norm(x):
 def angle(x,y):
   return abs(math.acos( dot(x,y) / (norm(x) * norm(y)) ))
 
-def get_best_bjj(bottoms, jets, top_system):
+def get_best_bjj(bottoms, jets):
   # ------------------------------------------
   # SELECT TWO bjj GROUPS WITH HIGHEST P_T
   # ------------------------------------------
@@ -52,6 +52,8 @@ def get_best_bjj(bottoms, jets, top_system):
   second = [0, '', '', '']
 
   jet_combos = set(itertools.combinations(jets, 2)) # all pairs of jets
+  if len(jet_combos) == 0:
+    return None, None, None
 
   for b in bottoms:
     bsplit = [x for x in b.split(' ') if x != '']
@@ -93,17 +95,12 @@ def get_best_bjj(bottoms, jets, top_system):
   # COLLECT M3 AND M2 CORRESPONDING TO TOP QUARK A ACROSS MULTIPLE EVENTS
   # -------------------------------------------------------
   err1, err2 = top_W_error(M3_1, M2_1), top_W_error(M3_2, M2_2)
-  current_system = [M3A,M2A] if top_system == 'A' else [M3B,M2B]
   if err1 <= err2:
-    best_top = first 
-    current_system[0].append(M3_1)
-    current_system[1].append(M2_1)
+    return first, M3_1, M2_1
   else:
-    best_top = second
-    current_system[0].append(M3_2)
-    current_system[1].append(M2_2)
+    return second, M3_2, M2_2
 
-  return best_top
+  # return best_top
 
 all_files = []; curr_file = []
 read_flag = False
@@ -162,14 +159,19 @@ for n in range(len(all_files)):
   # BEST BJJ COMBO = TOP QUARK A
   # BEST BJJ COMBO FROM REMAINING JETS = TOP QUARK B
   # -----------------------------------
-  topA = get_best_bjj(bottoms, jets, 'A');
+  topA, m31, m21 = get_best_bjj(bottoms, jets);
   if not topA: continue
 
   # Remove bjj of A from the set of bottoms and jets to consider for system B
   bottoms2 = [x for x in bottoms if x != topA[1]]
   jets2 = [x for x in jets if x not in topA[2:]]
-  topB = get_best_bjj(bottoms2, jets2, 'B')
+  topB, m32, m22 = get_best_bjj(bottoms2, jets2)
   if not topB: continue
+
+  M3A.append(m31)
+  M2A.append(m21)
+  M3B.append(m32)
+  M2B.append(m22)
 
   # -----------------------------------
   # AZIMUTHAL ANGLE CUTS
@@ -210,6 +212,7 @@ write_file('output/m2b.txt', M2B)
 write_file('output/angles_b.txt', b_angles)
 write_file('output/angles_j1.txt', j1_angles)
 write_file('output/angles_j2.txt', j2_angles)
+write_file('output/missing_pT.txt', pT_missing)
 
 # combine plots into one tar file
 # os.system("tar cf plots.tar *.txt && rm *.txt")
