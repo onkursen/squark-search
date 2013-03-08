@@ -142,15 +142,15 @@ def main():
   for (i, var) in zip(range(len(variables)), variables):
     print '%d. %s' % (i+1, var)
 
-  if not os.path.isdir('output'): os.system('mkdir output')
-  write_array_to_file('output/m3a.txt', M3A)                 # 1. M3 OF TOP QUARK A
-  write_array_to_file('output/m3b.txt', M3B)                 # 2. M2 OF TOP QUARK A
-  write_array_to_file('output/m2a.txt', M2A)                 # 3. M3 OF TOP QUARK B
-  write_array_to_file('output/m2b.txt', M2B)                 # 4. M2 OF TOP QUARK B
-  write_array_to_file('output/angles_b.txt', B_ANGLES)       # 5. AZIMUTHAL ANGLES FOR BOTTOM QUARK B
-  write_array_to_file('output/angles_j1.txt', J1_ANGLES)     # 6. AZIMUTHAL ANGLES FOR JET 1 IN SYSTEM B
-  write_array_to_file('output/angles_j2.txt', J2_ANGLES)     # 7. AZIMUTHAL ANGLES FOR JET 2 IN SYSTEM B
-  write_array_to_file('output/missing_pT.txt', MISSING_E)    # 8. MISSING TRANVERSE ENERGY E_T
+  if not os.path.isdir('bdt_variables'): os.system('mkdir bdt_variables')
+  write_array_to_file('bdt_variables/m3a.txt', M3A)                 # 1. M3 OF TOP QUARK A
+  write_array_to_file('bdt_variables/m3b.txt', M3B)                 # 2. M2 OF TOP QUARK A
+  write_array_to_file('bdt_variables/m2a.txt', M2A)                 # 3. M3 OF TOP QUARK B
+  write_array_to_file('bdt_variables/m2b.txt', M2B)                 # 4. M2 OF TOP QUARK B
+  write_array_to_file('bdt_variables/angles_b.txt', B_ANGLES)       # 5. AZIMUTHAL ANGLES FOR BOTTOM QUARK B
+  write_array_to_file('bdt_variables/angles_j1.txt', J1_ANGLES)     # 6. AZIMUTHAL ANGLES FOR JET 1 IN SYSTEM B
+  write_array_to_file('bdt_variables/angles_j2.txt', J2_ANGLES)     # 7. AZIMUTHAL ANGLES FOR JET 2 IN SYSTEM B
+  write_array_to_file('bdt_variables/missing_pT.txt', MISSING_E)    # 8. MISSING TRANVERSE ENERGY E_T
 
 if __name__ == "__main__":
   main()

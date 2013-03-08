@@ -34,4 +34,4 @@ histo.Draw()
 raw_input()
 
 print 'Saving histogram to energies.png.'
-c1.SaveAs('energies.png')
+c1.SaveAs('plots/energies.png')

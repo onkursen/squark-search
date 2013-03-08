@@ -7,7 +7,7 @@ def plot_var(var):
     var.upper(),
     "Distribution of %s: SUSY (Blue) vs. ttj (Red)" % var.upper(),
     45, 0, 900)
-  for line in open("output/susy/%s.txt" % var): susy.Fill(float(line))
+  for line in open("bdt_variables/train-susy/%s.txt" % var): susy.Fill(float(line))
   susy.SetLineColor(ROOT.kBlue)
   susy.SetLineWidth(2)
   # susy.Draw()
@@ -16,7 +16,7 @@ def plot_var(var):
     var.upper(),
     "Distribution of %s: SUSY (Blue) vs. ttj (Red)" % var.upper(),
     45, 0, 900)
-  for line in open("output/ttj/%s.txt" % var): ttj.Fill(float(line))
+  for line in open("bdt_variables/train-ttj/%s.txt" % var): ttj.Fill(float(line))
   ttj.SetLineColor(ROOT.kRed)
   ttj.SetLineWidth(2)
   # ttj.Draw("same")
@@ -34,7 +34,7 @@ def plot_angle(var):
   susy = ROOT.TH1F("%s_angles" % var,
     "Azimuthal Angles: SUSY (Blue) vs. ttj (Red)",
     35, 0, 3.5)
-  for line in open("output/susy/angles_%s.txt" % var):
+  for line in open("bdt_variables/train-susy/angles_%s.txt" % var):
     susy.Fill(float(line))
   susy.SetLineColor(ROOT.kBlue)
   susy.SetLineWidth(2)
@@ -49,7 +49,7 @@ def plot_angle(var):
 
   ttj = ROOT.TH1F("%s_angles" % var,
     "Azimuthal Angles of Bottom Quark", 35, 0, 3.5)
-  for line in open("output/ttj/angles_%s.txt" % var):
+  for line in open("bdt_variables/train-ttj/angles_%s.txt" % var):
     ttj.Fill(float(line))
   ttj.SetLineColor(ROOT.kRed)
   ttj.SetLineWidth(2)

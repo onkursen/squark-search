@@ -23,8 +23,8 @@ variables = [
 
 susy = []; ttj = [];
 for v in variables:
-  susy.append(to_float_array('output/susy/%s.txt' % v))
-  ttj.append(to_float_array('output/ttj/%s.txt' % v))
+  susy.append(to_float_array('bdt_variables/train-susy/%s.txt' % v))
+  ttj.append(to_float_array('bdt_variables/train-ttj/%s.txt' % v))
 
 # fill ROOT nTuple with signal and background variables
 ntuple = ROOT.TNtuple("ntuple","ntuple","%s:signal" % ':'.join(variables))
@@ -142,7 +142,7 @@ directory = 'classify-mix'
 # directory = 'classify-ttj-only'
 # directory = 'classify-susy-only'
 for v in variables:
-  classify[v] = to_float_array('%s/%s.txt' % (directory,v))
+  classify[v] = to_float_array('bdt_variables/%s/%s.txt' % (directory,v))
   reader_variables[v] = array.array('f',[0])
   reader.AddVariable(v,reader_variables[v])
 
