@@ -113,6 +113,30 @@ January 28, 2013:
 	//Write up outline in Powerpoint
 	//Post code on github
 
+	Figure out exactly what histogram is representing
+	Branching ratio?
+
 	dartmouth is removing all ap credit
 	rice and smu keep backups of each others stuff
 	inverse corrolations bewteen family financial support and success
+
+Febraury 11, 2013:
+	Powerpoint format
+		more detail
+		plots
+		Imagine you're presenting thesis as ppt
+		Everything, not just what's been done since last presentation
+		Take some subset of those and use for presentation
+	Branching ratio: encoded in data files
+		print out dump of ascii files, you'll see cross-section numbers
+	pick few susy points
+		combine with background (same for all)
+		train on each susy point with background and then test
+		how many susy events got through
+		also do cuts as per dutta paper
+	training
+		how to combine signal/background?
+		do 1:1 for training; get a set of results
+	start writing thesis!
+	Presentation date: March 11
+		also get first draft of thesis done by then

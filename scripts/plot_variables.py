@@ -1,4 +1,5 @@
 from ROOT import TH1F, TCanvas, TLegend
+import os
 
 def plot_var(var, directory):
   histo = TH1F(
@@ -42,6 +43,8 @@ def plot_angle(var):
   leg_hist.Draw()
 
   c1.SaveAs("plots/plot_angles_%s.png" % var)
+
+if not os.path.isdir('plots'): os.system('mkdir plots')
 
 plot_var('m3a', 'susy')
 plot_var('m3a', 'ttj')
