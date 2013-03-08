@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Searching for Supersymmetric Top Quarks at the LHC</title>
+
+<!-- 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML"> -->
+		<meta name="author" content="Onkur Sen">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+		<!-- <script type="text/javascript" src="js/MathJax.js"></script> -->
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=default"></script>
+		<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section data-markdown>
+					## Searching for Supersymmetric Top Quarks at the LHC
+
+					[Onkur Sen](http://onkursen.com/single) and [Dr. Paul Padley](http://www.bonner.rice.edu/padley/)  
+					Rice University  
+					[github.com/onkursen/squark-search](http://github.com/onkursen/squark-search)
+					</p>
+				</section>
+
+				<section>
+					<section>
+						<h2>Motivation and Background</h2>
+					</section>
+					
+					<section data-markdown>
+						## Why are we doing this?
+						* LHC: Higgs mass in 125 GeV region
+						* Standard model: higher loop corrections to Higgs mass diverge quadratically
+							* "Fine-tuning problem"
+						* Subtracting two very large numbers
+							* Another way?
+					</section>
+
+					<section data-markdown>
+						## Supersymmetry (SUSY)
+						* Main idea: Fermion-boson pairs with same mass, quantum numbers (except spin)
+							* Partner for boson: -ino
+							* Partner for fermion: s-
+						* Higher loops cancel partially
+						* Logarithmic divergence instead of quadratic
+						* Interesting note: supersymmetry came from string theory
+							* Stands on its own as an idea
+					</section>
+
+					<section data-markdown>
+						## Using SUSY 
+						* If supersymmetric partner for top quark exists, higher-order corrections cancel
+						* Feasibility
+							* Can only cover some of the parameter space at the current energy level
+							* Gluinos and heavier stop quarks cannot be detected
+						* No supersymmetric particle has been discovered yet!
+							* Searching in the dark
+							* Not clear that you can ever rule out supersymmetry
+					</section>
+
+					<section>
+						<h2>The Stop Quark</h2>
+						<ul>
+							<li>Stop quark = top squark = supersymmetric top quark</li>
+							<li>Expected decay mode: 
+							\[ \tilde{t} \to t + \tilde{\chi}_1^0 \]
+							where \( \tilde{\chi}_1^0 \) is lightest supersymmetric particle (LSP)</li>
+							<li><strong>Our goal</strong>: use machine learning to optimize the search for this particular decay mode</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+				<section data-markdown>
+						## The machine learning problem: Classification
+					</section>
+					<section data-markdown>
+						## Description
+						
+						* **Goal**: separating a set of data points into two categories, signal and background
+						* What's been tried so far?
+							* Support vector machines (SVMs): Separate data into two classes using a hyperplane that maximizes the "margin"
+							* Linear discriminant analysis (LDA): Find linear combination of features that best separates data
+							* Neural Networks: use connected "neurons" with different layers to adapt
+					</section>
+
+					<section>
+						<h2>Decision trees</h2>
+						<ul>
+							<li>Make a yes/no decision based on many factors</li>
+							<li>Think flowcharts</li>
+						</ul>
+						<img src='http://imgs.xkcd.com/comics/flow_charts.png' width='500' height='360'>
+					</section>
+
+					<section data-markdown>
+						## Boosting
+
+						* Combine many weak learners to make a strong learner
+						* This is a form of **supervised learning**: train on data for which the result is known, then apply to new data
+						* AdaBoost (adaptive boosting): most common boosting algorithm
+						<!-- TODO talk more about AdaBoost -->
+
+						### Our approach:
+						### Boosted decision trees
+						### (BDTs)
+					</section>
+
+					<section data-markdown>
+						## Context 
+						* In our case, data = **jets**
+							* Representation of collision result
+							* One jet = one final particle
+						* BDTs have been particularly good for Higgs searches among other CMS analyses
+						* Phenomenological data from [Dutta et. al.](http://prd.aps.org/abstract/PRD/v86/i7/e075004) provides a proposed search mechanism for squarks
+							* We are extending using BDTs
+							* Use variables detailed in paper as checkpoints for learning
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Outline of Approach</h2>
+					</section>
+
+					<section data-markdown>
+						## Getting acquainted
+
+						* Received phenomenological data from [Dutta](http://people.physics.tamu.edu/dutta/) et. al. (Texas A&amp;M)
+						* [PGS4](http://www.physics.ucdavis.edu/~conway/research/software/pgs/pgs4-general.htm)
+							* Translating data from PYTHIA to objects and jets
+							* Creates objects by simulating the detector
+						* Used [PYTHIA](http://home.thep.lu.se/~torbjorn/Pythia.html) and [ROOT](http://root.cern.ch/drupal/) to do basic data analysis on particle collisions
+						* Isolated jets and observed energy distribution
+					</section>
+
+					<section>
+						<!-- TODO better slide title -->
+						<h2>Defining Desired Parameters</h2>
+						<ul>
+							<li>
+							<a href="http://www.phy.pku.edu.cn/~susy2012/resources/conf_day4/parallel/3_Stop_with_M3_v1a_Kamon.pdf">M3</a>
+							<ul>
+								<li>Separating top-top events from background</li>
+								<li>Invariant mass of 3 jets with largest vectorially summed transverse momentum:
+									\[
+									b^{*}, j_1^{*}, j_2^{*} = \underset{(b, j_1, j_2)}{\arg\max}\; \left|\left|\; p_T(b) + p_T(j_1) + p_T(j_2) \;\right|\right| 
+									\]
+									\[
+									M3 = invariant\_mass\left(b^{*}, j_1^{*}, j_2^{*}\right)
+									\]
+								</li>
+
+								<li>Most effective with 4+ jets; our data has 6</li>
+							</ul>
+							</li>
+							<li>Transverse energy analysis
+							<ul>
+								<li>Separating QCD events</li>
+								<li>Most effective with 3 jets &rarr; group the data into two systems</li>
+							</ul>
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Identifying Two Top Quark Systems</h2>
+						<div class="row-fluid">
+						<div class="span5">
+						<ul>
+							<li>2 \(bjj\) groups maximizing transverse momentum</li>
+							<ul>
+								<li>\( t \to b + W \to b + 2j \)</li>
+							</ul>
+							<li>Calculate M3 for both</li>
+							<li>Calculate M2 for both (invariant mass of jets)</li>
+							<li>Least-squares error (M3 \(\leftrightarrow t\), M2 \(\leftrightarrow W\))</li>
+							<li>Top quark A = Better combination</li>
+							<li>Top quark B = best from rest of system</li>
+						</ul>
+					</div>
+					<div class="span6 offset1">
+						<img src="images/top-quark-systems.png">
+						<p>
+							(Dutta et. al.)
+						</p>
+					</div>
+					</div>
+					</section>
+
+					<section data-markdown>
+						## BDT implementation
+						
+						* Package: [ROOT TMVA](http://tmva.sourceforge.net/)
+						* Variables/factors considered
+							* M3 of top quark A
+							* M3 of top quark B
+							* M2 of top quark A
+							* M2 of top quark B
+							* Tranverse momentum azimuthal angle of bottom quark
+							* Tranverse momentum azimuthal angle of 2 jets
+						* Train with SUSY as signal, ttj as background
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Distributions of Variables</h2>
+						<h3>SUSY vs ttj</h2>
+					</section>
+					<!-- TODO explain SUSY space; that there are many possible parameters and that we are picking a few -->
+					<section>
+						<h3>M3</h3>
+						<table><tr>
+								<td width="450">
+									M3A<img src='images/plot_m3a.png' width='450' height='450'>
+								</td>
+								<td width="450" style="text-align:right;">
+									M3B<img src='images/plot_m3b.png' width='450' height='450'>
+								</td>
+						</tr></table>
+					</section>
+					<section>
+						<h3>M2</h3>
+						<table><tr>
+								<td width="450">
+									M2A<img src='images/plot_m2a.png' width='450' height='450'>
+								</td>
+								<td width="450" style="text-align:right;">
+									M2B<img src='images/plot_m2b.png' width='450' height='450'>
+								</td>
+						</tr></table>
+					</section>
+					<section>
+						<h3>Azimuthal Angles</h3>
+						<table><tr>
+								<td width="350">Bottom Quark</td>
+								<td width="350" style="text-align:center;">Jet 1</td>
+								<td width="350" style="text-align:right;">Jet 2</td>
+						</tr><tr>
+								<td width="350"><img src='images/plot_angles_b.png'></td>
+								<td width="350"><img src='images/plot_angles_j1.png'></td>
+								<td width="350"><img src='images/plot_angles_j2.png'></td>
+						</tr></table>
+					</section>
+				</section>
+
+				<section>
+					<h2>Signal-Background Separation</h2>
+					<p>
+						This could be trouble; the signal is almost completely contained within the background!
+					</p>
+					<img src='images/bdt-separation.png' width='440' height='440'>
+				</section>
+
+				<section data-markdown>
+					## Remaining tasks
+
+					* Use trained BDT to classify events from phenomenological data
+						* Measure performance on signal, background, and mix
+					* Examine individual decision trees more precisely to determine viability of approach
+						* Don't want to use them blindly
+				</section>
+				<section data-markdown>
+					## Potential
+					
+					If this project succeeds we can:
+					
+					* Strongly suggest the evidence of a supersymmetric particle
+					* Detect it now within the current parameter space
+					* Provide a possible partial solution to the fine-tuning problem in the Higgs context
+					</section>
+					<!-- TODO add acknowledgments -->
+			</div>
+
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
