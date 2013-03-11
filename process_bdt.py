@@ -38,18 +38,28 @@ variables = [
 
 susy = []; ttj = [];
 for v in variables:
-  susy.append(to_float_array('bdt_variables/train-susy/%s.txt' % v))
-  ttj.append(to_float_array('bdt_variables/train-ttj/%s.txt' % v))
+  susy.append(to_float_array('bdt_variables/bdt_variables-100t400_8TeV-55/%s.txt' % v))
+  ttj.append(to_float_array('bdt_variables/bdt_variables-ttj006f38-9/%s.txt' % v))
 
 # fill ROOT nTuple with signal and background variables
 ntuple = ROOT.TNtuple("ntuple","ntuple","%s:signal" % ':'.join(variables))
-for i in range(min([len(var) for var in susy])):
+print 'Number of SUSY data points: %d' % len(susy[0])
+print 'Number of TTJ data points: %d' % len(ttj[0])
+
+l = min( len(susy[0]),  len(ttj[0]) )
+
+# for i in range(min([len(var) for var in susy])):
+for i in range(l):
   curr = [var[i] for var in susy] + [1] # susy is signal
   ntuple.Fill(*curr)
 
-for i in range(min([len(var) for var in ttj])):
+# for i in range(min([len(var) for var in ttj])):
+for i in range(l):
   curr = [var[i] for var in ttj] + [0] # ttbar is background
   ntuple.Fill(*curr)
+
+print 'NTuple populated.'
+raw_input('press any key to continue')
 
 print 'NTuple prepared to be fed into BDT'
 
@@ -88,7 +98,9 @@ factory.PrepareTrainingAndTestTree(
   ":".join([
     "nTrain_Signal=0",
     "nTrain_Background=0",
-    "SplitMode=Random",
+    "nTrain_Signal=0",
+    "nTrain_Background=0",
+    "SplitMode=Alternate",
     "NormMode=NumEvents",
     "!V"
   ]))
@@ -123,8 +135,8 @@ print 'BDTs trained using ROOT TMVA'
 c1 = ROOT.TCanvas("c1","c1",800,800);
 
 # fill histograms for signal and background from the test sample tree
-ROOT.TestTree.Draw("BDT>>hSig(220,-1.1,1.1)","classID == 1","goff")  # signal
-ROOT.TestTree.Draw("BDT>>hBg(220,-1.1,1.1)","classID == 0", "goff")  # background
+ROOT.TestTree.Draw("BDT>>hSig(200,-0.5,0.5)","classID == 1","goff")  # signal
+ROOT.TestTree.Draw("BDT>>hBg(200,-0.5,0.5)","classID == 0", "goff")  # background
 
 ROOT.hSig.SetLineColor(ROOT.kBlue); ROOT.hSig.SetLineWidth(2)  # signal histogram
 ROOT.hBg.SetLineColor(ROOT.kRed); ROOT.hBg.SetLineWidth(2)   # background histogram
@@ -144,7 +156,7 @@ c1.SaveAs("plots/bdt-separation.png")
 
 raw_input("Press any key to close.")
 
-exit(0)
+# exit(0)
 
 print 'APPLY CLASSIFIER TO NEW INSTANCES'
 
@@ -154,10 +166,11 @@ reader_variables = {}
 classify = {}
 
 # directory = 'classify-mix'
-directory = 'classify-ttj-only'
+# directory = 'classify-ttj-only'
 # directory = 'classify-susy-only'
 for v in variables:
-  classify[v] = to_float_array('bdt_variables/%s/%s.txt' % (directory,v))
+  # classify[v] = to_float_array('bdt_variables/%s/%s.txt' % (directory,v))
+  classify[v] = to_float_array('bdt_variables/bdt_variables-classify-mix-susy55-ttj8-9/%s.txt' % v)
   reader_variables[v] = array.array('f',[0])
   reader.AddVariable(v,reader_variables[v])
 
