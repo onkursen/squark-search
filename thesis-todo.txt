@@ -140,3 +140,10 @@ Febraury 11, 2013:
 	start writing thesis!
 	Presentation date: March 11
 		also get first draft of thesis done by then
+
+March 9, 2013:
+	update readme and documentation for robert
+	add more bins to signal-background separation
+	fix branching ratios so that signal-background is as expected
+		look at cross-section info in files?
+	use multiple susy points

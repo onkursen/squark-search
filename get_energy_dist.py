@@ -1,7 +1,20 @@
+# ------------------------------------------
+# Onkur Sen
+# 
+# get_energy_dist.py
+#
+# Usage: python get_energy_dist.py [filename]
+# 
+# Reads all events from a single source file
+# (SUSY or ttj) and plots the distribution
+# of energies of all untagged jets.
+# ------------------------------------------
+
 from functions import *
 from sys import argv
 from ROOT import TH1F, TCanvas
 from time import time
+import os
 
 print 'Reading events from source file %s' % argv[1]
 t = time()
@@ -33,5 +46,6 @@ c1 = TCanvas('c1','c1',800,800)
 histo.Draw()
 raw_input()
 
-print 'Saving histogram to energies.png.'
-c1.SaveAs('plots/energies.png')
+print 'Saving histogram.'
+if not os.path.isdir('plots'): os.system('mkdir plots')
+c1.SaveAs('plots/energies_%s.png' % argv[1])

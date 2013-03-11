@@ -1,3 +1,13 @@
+# ------------------------------------------
+# Onkur Sen
+# 
+# plot_variables.py
+# 
+# Plots distributions of both non-angle
+# and angle variables for SUSY and ttj
+# events.
+# ------------------------------------------
+
 import ROOT, os
 
 def plot_var(var):
@@ -10,7 +20,6 @@ def plot_var(var):
   for line in open("bdt_variables/train-susy/%s.txt" % var): susy.Fill(float(line))
   susy.SetLineColor(ROOT.kBlue)
   susy.SetLineWidth(2)
-  # susy.Draw()
 
   ttj = ROOT.TH1F(
     var.upper(),
@@ -19,7 +28,6 @@ def plot_var(var):
   for line in open("bdt_variables/train-ttj/%s.txt" % var): ttj.Fill(float(line))
   ttj.SetLineColor(ROOT.kRed)
   ttj.SetLineWidth(2)
-  # ttj.Draw("same")
 
   hs = ROOT.THStack("hs","Distribution of %s: SUSY (Blue) vs. ttj (Red)" % var.upper())
   hs.Add(susy)
@@ -34,17 +42,14 @@ def plot_angle(var):
   susy = ROOT.TH1F("%s_angles" % var,
     "Azimuthal Angles: SUSY (Blue) vs. ttj (Red)",
     35, 0, 3.5)
-  for line in open("bdt_variables/train-susy/angles_%s.txt" % var):
-    susy.Fill(float(line))
+  for line in open("bdt_variables/train-susy/angles_%s.txt" % var): susy.Fill(float(line))
   susy.SetLineColor(ROOT.kBlue)
   susy.SetLineWidth(2)
   if susy.Integral()!=0: susy.Scale(1/susy.Integral())
   susy.SetMaximum(0.06)
-  susy.GetYaxis().SetTitleSize(0.05)
   susy.SetLabelSize(0.05,"x")
-  susy.GetXaxis().SetTitleSize(0.05)
-  susy.SetXTitle("#Delta#phi")
-  susy.SetYTitle("Fraction / 0.1")
+  susy.SetXTitle("#Delta#phi"); susy.SetYTitle("Fraction / 0.1")
+  susy.GetYaxis().SetTitleSize(0.05); susy.GetXaxis().SetTitleSize(0.05)
   susy.Draw()
 
   ttj = ROOT.TH1F("%s_angles" % var,

@@ -1,3 +1,16 @@
+# ------------------------------------------
+# Onkur Sen
+# 
+# get_bdt_variables.py
+#
+# Usage: python get_bdt_variables.py [filename]
+# 
+# Reads all event runs from a file,
+# separates each run into two bjj systems,
+# and keeps track of important variables
+# to feed into a boosted decision tree (BDT).
+# ------------------------------------------
+
 from functions import *
 from itertools import combinations
 from math import sqrt
@@ -6,6 +19,9 @@ from time import time
 import os
 
 def get_best_bjj(bottoms, jets):
+  """
+  Selects two bjj combinations with highest vectorially summed transverse momentum. Returns the combination with a smaller least-squares error from the top quark and W boson.
+  """
   if len(jets) < 2: return None, None, None 
   # ------------------------------------------
   # SELECT TWO bjj GROUPS WITH HIGHEST P_T
@@ -74,7 +90,6 @@ def main():
 
   for i in range(len(events_by_file)):
     (events, bottoms, jets) = events_by_file[i]
-    # print 'Event %d of %d' % (i+1, len(events_by_file))
 
     if len(bottoms) < 2:
       # print 'Event %d has too few bottom quarks' % i
@@ -87,7 +102,6 @@ def main():
     # -----------------------------------
     topA, m31, m21 = get_best_bjj(bottoms, jets);
     if not topA:
-      # print 'Event %d has no top quark system A'
       continue
     else: has_topA += 1
 
@@ -96,7 +110,6 @@ def main():
     jets2 = [x for x in jets if x not in topA[2:]]
     topB, m32, m22 = get_best_bjj(bottoms2, jets2)
     if not topB:
-      # print 'Event %d has no top quark system B'
       continue
     else: has_topB += 1
 

@@ -1,3 +1,18 @@
+# ------------------------------------------
+# Onkur Sen
+# 
+# process_bdt.py
+#
+# Usage: python process_bdt.py
+# 
+# Reads files with information on parameters
+# that is processed from get_bdt_variables.py
+# and feeds input into a boosted decision
+# tree (BDT). Signal-background separation is
+# plotted, and classification of events in
+# another input file is attempted.
+# ------------------------------------------
+
 import ROOT
 from time import strftime, localtime
 import array
@@ -71,29 +86,27 @@ factory.PrepareTrainingAndTestTree(
   sigCut,   # signal events
   bgCut,    # background events
   ":".join([
-      "nTrain_Signal=0",
-      "nTrain_Background=0",
-      "SplitMode=Random",
-      "NormMode=NumEvents",
-      "!V"
+    "nTrain_Signal=0",
+    "nTrain_Background=0",
+    "SplitMode=Random",
+    "NormMode=NumEvents",
+    "!V"
   ]))
 
 method = factory.BookMethod(
   ROOT.TMVA.Types.kBDT,
   "BDT",
   ":".join([
-     "!H",
-     "!V",
-     "NTrees=850",
-     "nEventsMin=150",
-     "MaxDepth=3",
-     "BoostType=AdaBoost",
-     "AdaBoostBeta=0.5",
-     "SeparationType=GiniIndex",
-     "nCuts=20",
-     # "PruneMethod=NoPruning",
-     "PruneMethod=CostComplexity",
-     "PruneStrength=-1"
+   "!H",
+   "!V",
+   "NTrees=850",
+   "nEventsMin=150",
+   "MaxDepth=3",
+   "BoostType=AdaBoost",
+   "AdaBoostBeta=0.5",
+   "SeparationType=GiniIndex",
+   "nCuts=20",
+   "PruneMethod=NoPruning"
   ]))
 
 factory.TrainAllMethods()
@@ -110,8 +123,8 @@ print 'BDTs trained using ROOT TMVA'
 c1 = ROOT.TCanvas("c1","c1",800,800);
 
 # fill histograms for signal and background from the test sample tree
-ROOT.TestTree.Draw("BDT>>hSig(22,-1.1,1.1)","classID == 1","goff")  # signal
-ROOT.TestTree.Draw("BDT>>hBg(22,-1.1,1.1)","classID == 0", "goff")  # background
+ROOT.TestTree.Draw("BDT>>hSig(220,-1.1,1.1)","classID == 1","goff")  # signal
+ROOT.TestTree.Draw("BDT>>hBg(220,-1.1,1.1)","classID == 0", "goff")  # background
 
 ROOT.hSig.SetLineColor(ROOT.kBlue); ROOT.hSig.SetLineWidth(2)  # signal histogram
 ROOT.hBg.SetLineColor(ROOT.kRed); ROOT.hBg.SetLineWidth(2)   # background histogram
@@ -131,6 +144,8 @@ c1.SaveAs("plots/bdt-separation.png")
 
 raw_input("Press any key to close.")
 
+exit(0)
+
 print 'APPLY CLASSIFIER TO NEW INSTANCES'
 
 # APPLY CLASSIFIER TO NEW INSTANCES
@@ -138,19 +153,21 @@ reader = ROOT.TMVA.Reader()
 reader_variables = {}
 classify = {}
 
-directory = 'classify-mix'
-# directory = 'classify-ttj-only'
+# directory = 'classify-mix'
+directory = 'classify-ttj-only'
 # directory = 'classify-susy-only'
 for v in variables:
   classify[v] = to_float_array('bdt_variables/%s/%s.txt' % (directory,v))
   reader_variables[v] = array.array('f',[0])
   reader.AddVariable(v,reader_variables[v])
 
-reader.BookMVA("BDT","weights/TMVAClassification_BDT.weights.xml")
+reader.BookMVA("BDT", "weights/TMVAClassification_BDT.weights.xml")
 
+outputs = []
 for i in range(len(classify[variables[0]])):
   for v in variables:
     reader_variables[v] = classify[v][i]
   bdtOutput = reader.EvaluateMVA("BDT")
-  print bdtOutput
+  outputs.append(bdtOutput)
+print outputs
   
