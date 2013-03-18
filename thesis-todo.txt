@@ -147,3 +147,9 @@ March 9, 2013:
 	fix branching ratios so that signal-background is as expected
 		look at cross-section info in files?
 	use multiple susy points
+
+March 13, 2013:
+	TBrowser
+	look at different susy points
+	consider their cut and count method
+	plot on the root plots all on one plot

@@ -153,24 +153,17 @@ hs.Draw()
 # legend.Draw()
 
 c1.SaveAs("plots/bdt-separation.png")
+raw_input("Signal-background separation plotted. Press any key to continue.")
 
-raw_input("Press any key to close.")
-
-# exit(0)
-
-print 'APPLY CLASSIFIER TO NEW INSTANCES'
-
-# APPLY CLASSIFIER TO NEW INSTANCES
+print 'Applying classifier to new instances.'
 reader = ROOT.TMVA.Reader()
 reader_variables = {}
 classify = {}
 
-# directory = 'classify-mix'
-# directory = 'classify-ttj-only'
-# directory = 'classify-susy-only'
 for v in variables:
-  # classify[v] = to_float_array('bdt_variables/%s/%s.txt' % (directory,v))
-  classify[v] = to_float_array('bdt_variables/bdt_variables-classify-mix-susy55-ttj8-9/%s.txt' % v)
+  classify[v] = to_float_array(
+    'bdt_variables/bdt_variables-classify-mix-susy55-ttj8-9/%s.txt' % v
+  )
   reader_variables[v] = array.array('f',[0])
   reader.AddVariable(v,reader_variables[v])
 
@@ -178,9 +171,8 @@ reader.BookMVA("BDT", "weights/TMVAClassification_BDT.weights.xml")
 
 outputs = []
 for i in range(len(classify[variables[0]])):
-  for v in variables:
-    reader_variables[v] = classify[v][i]
+  for v in variables: reader_variables[v][0] = classify[v][i]
   bdtOutput = reader.EvaluateMVA("BDT")
   outputs.append(bdtOutput)
-print outputs
+print ', '.join('%.3f' % o for o in outputs)
   
