@@ -14,10 +14,11 @@ from time import time
 def get_best_bjj(bottoms, jets):
   
   # Need at least two untagged jets for a top quark system
-  if len(jets) < 2: return None, None, None 
+  if len(jets) < 2:
+    return None, None, None 
   
   # Placeholder variables for bjj groups with top two p_t
-  first = [0, '', '', '']; second = [0, '', '', ''] 
+  first, second = [0, '', '', ''], [0, '', '', ''] 
 
   # All pairs of jets
   jet_combos = set(combinations(jets, 2)) 
@@ -36,7 +37,8 @@ def get_best_bjj(bottoms, jets):
         second = [p_t, b, j1, j2]
 
   # Limiting case: if only 2 jets, then second will never be assigned
-  if second[0] == 0: second = first
+  if second[0] == 0:
+    second = first
   
   # ### CALCULATE M3 FOR BOTH GROUPS
   
@@ -89,17 +91,13 @@ def main():
     'angles_b_b',   # AZIMUTHAL ANGLE FOR BOTTOM QUARK IN SYSTEM B
     'angles_j1_b',  # AZIMUTHAL ANGLE FOR JET 1 IN SYSTEM B
     'angles_j2_b',  # AZIMUTHAL ANGLE FOR JET 2 IN SYSTEM B
+    # 'mT_b',         # INVARIANT TRANSVERSE MASS OF BOTTOM QUARK B AND MISSING ENERGY
     'missing_eT'    # MISSING TRANVERSE ENERGY
   ]
 
   # Output buffer
   output = open('bdt_variables-%s' % argv[1].split('/')[-1], 'w')
-  
-  print 'Variables used in BDT processing:'
-  for (i, var) in zip(range(len(variables)), variables):
-    print '%d. %s' % (i+1, var)
   output.write('\t'.join(variables) + '\n')
-
 
   for i in range(num_events):
     (events, bottoms, jets) = events_by_file[i]
@@ -137,6 +135,12 @@ def main():
     pT_bjjA = [get_pe(topA[k])[:2] for k in range(1, 4)]
     pT_bjjB = [get_pe(topB[k])[:2] for k in range(1, 4)]
 
+    # Invariant mass from p_t of bottom quarks and missing energy
+    mT_B = pT_missing[0]**2 + pT_missing[1]**2 + \
+            pT_bjjB[0][0]**2 + pT_bjjB[0][1]**2 - \
+            (pT_missing[0]**2 + pT_bjjB[0][0]**2) - \
+            (pT_missing[1]**2 + pT_bjjB[0][1]**2)
+
     # Azimuthal angle between each jet and missing transverse momentum
     anglesA = [angle(j, pT_missing) for j in pT_bjjA]
     anglesB = [angle(j, pT_missing) for j in pT_bjjB]
@@ -144,9 +148,10 @@ def main():
     # Output variable values to buffer
     output.write(
       '%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n' %
-      (m31, m21, anglesA[0], anglesA[1], anglesA[2],  # System A parameters
-        m32, m22, anglesB[0], anglesB[1], anglesB[2], # System B parameters
-        missing_e)
+      (m31, m21, anglesA[0], anglesA[1], anglesA[2], 
+        m32, m22, anglesB[0], anglesB[1], anglesB[2], #mT_B, 
+        missing_e
+      )
     )
 
     # Cut and count as proposed by Dutta et. al.
@@ -171,6 +176,10 @@ def main():
   print 'Number of events that passed through cuts:', meets_cuts
   eff = meets_cuts * 100.0 / num_events
   print 'Efficiency = %2.2f%%, Rejection = %2.2f%%\n' % (eff, 100-eff)
+
+  print 'Variables used in BDT processing:'
+  for (i, var) in zip(range(len(variables)), variables):
+    print '%d. %s' % (i+1, var)
 
 if __name__ == "__main__":
   main()

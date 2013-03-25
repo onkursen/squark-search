@@ -19,10 +19,10 @@ try:
   susy_source = argv[1]
   ttj_source = argv[2]
 except IndexError:
-  exit('ERROR: Program requires two arguments; one for susy path and one for background path, e.g., "python process_bdt.py 100t400_8TeV-52 ttj006f3-6789"')
+  exit('ERROR: Program requires two arguments; one for susy path and one for background path, e.g., "python process_bdt.py 100t400_8TeV-52.txt ttj006f3-6789.txt"')
 
-susy = open('bdt_variables-%s.txt' % susy_source).read().split('\n')
-ttj = open('bdt_variables-%s.txt' % ttj_source).read().split('\n')
+susy = open(susy_source).read().split('\n')
+ttj = open(ttj_source).read().split('\n')
 
 # Remove variables at beginning and blank line at end
 variables = susy.pop(0).split('\t'); susy.pop()
@@ -95,8 +95,7 @@ method = factory.BookMethod(
   ":".join([
    "!H",
    "!V",
-   "NTrees=%d" % numTrees, 
-   # "nEventsMin=150",
+   "NTrees=%d" % numTrees,
    "MaxDepth=3",
    "BoostType=AdaBoost",
    "AdaBoostBeta=0.5",
