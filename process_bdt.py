@@ -1,9 +1,6 @@
-# ------------------------------------------
 # Onkur Sen
 # 
-# process_bdt.py
-#
-# Usage: python process_bdt.py
+# Usage: python process_bdt.py [susy_filename] [ttj_filename]
 # 
 # Reads files with information on parameters
 # that is processed from get_bdt_variables.py
@@ -11,48 +8,51 @@
 # tree (BDT). Signal-background separation is
 # plotted, and classification of events in
 # another input file is attempted.
-# ------------------------------------------
 
 import ROOT
 from time import strftime, localtime
-from sys import argv
+from sys import argv, exit
 
-# ------------------------------------
-# PREPARE DATA TO BE FED INTO BDT
-# ------------------------------------
+# ### Fill Ntuple with signal and background data to be fed into BDT
 
-susy_source = argv[1]
-ttj_source = argv[2]
+try:
+  susy_source = argv[1]
+  ttj_source = argv[2]
+except IndexError:
+  exit('ERROR: Program requires two arguments; one for susy path and one for background path, e.g., "python process_bdt.py 100t400_8TeV-52 ttj006f3-6789"')
 
 susy = open('bdt_variables-%s.txt' % susy_source).read().split('\n')
 ttj = open('bdt_variables-%s.txt' % ttj_source).read().split('\n')
 
-# Remove variables and blank line
+# Remove variables at beginning and blank line at end
 variables = susy.pop(0).split('\t'); susy.pop()
 ttj.pop(0); ttj.pop()
 
 print 'Number of SUSY data points from %s: %d' % (susy_source, len(susy))
 print 'Number of TTJ data points from %s: %d' % (ttj_source, len(ttj))
 
+# Number of decision trees should be on the order of sqrt(number of events)
+numTrees = int(min(len(susy), len(ttj))**0.5)
+print 'Number of decision trees used in BDT:', numTrees
+
 # Fill ROOT nTuple with signal and background variables
 ntuple = ROOT.TNtuple("ntuple","ntuple","%s:signal" % ':'.join(variables))
 
+# Note: '*' needed for pointer
 for event in susy:
-  curr = map(float, event.split('\t')) + [1]
-  ntuple.Fill(*curr)
+  ntuple.Fill(*(map(float, event.split('\t')) + [1]))
 
 for event in ttj:
-  curr = map(float, event.split('\t')) + [0]
-  ntuple.Fill(*curr)
+  ntuple.Fill(*(map(float, event.split('\t')) + [0]))
 
-raw_input('NTuple populated. Press any key to continue.')
+raw_input('NTuple populated with signal and background events. Press any key to continue.')
 
-# -------------------------------------------------------------------
-# CREATE AND TRAIN BDT USING ROOT TMVA
-# Code taken from: 
+# ### Train and test BDT using ROOT TMVA
+# http://tmva.sourceforge.net/
+# Code modified from: 
 # http://aholzner.wordpress.com/2011/08/27/a-tmva-example-in-pyroot/
-# -------------------------------------------------------------------
-print 'NTuple prepared to be fed into BDT'
+
+print 'Running BDT testing and training methods.'
 
 fout = ROOT.TFile("test.root","RECREATE")
 
@@ -72,7 +72,7 @@ for v in variables: factory.AddVariable(v,"F")
 factory.AddSignalTree(ntuple)
 factory.AddBackgroundTree(ntuple)
 
-# cuts defining the signal and background sample
+# Cuts defining the signal and background sample
 sigCut = ROOT.TCut("signal > 0.5")
 bgCut = ROOT.TCut("signal <= 0.5")
 
@@ -95,8 +95,8 @@ method = factory.BookMethod(
   ":".join([
    "!H",
    "!V",
-   "NTrees=30", # approximately 1000 events fed to BDT; number of trees should be sqrt(num_events)
-   "nEventsMin=150",
+   "NTrees=%d" % numTrees, 
+   # "nEventsMin=150",
    "MaxDepth=3",
    "BoostType=AdaBoost",
    "AdaBoostBeta=0.5",
@@ -109,30 +109,6 @@ factory.TrainAllMethods()
 factory.TestAllMethods()
 factory.EvaluateAllMethods()
 
-raw_input('BDTs trained using ROOT TMVA in test.root. Press any key to open TBrowser.')
+raw_input('BDT results are in in test.root. Press any key to open TBrowser.')
 tb = ROOT.TBrowser()
 raw_input('TBrowser opened. Press any key to close.')
-exit(0)
-
-# ------------------------------------
-# PLOT HISTOGRAM OF SIGNAL VS. BACKGROUND 
-# TO SHOW FEASIBILITY OF SEPARATION
-# ------------------------------------
-
-c1 = ROOT.TCanvas("c1","c1",800,800);
-
-# fill histograms for signal and background from the test sample tree
-ROOT.TestTree.Draw("BDT>>hSig(200,-0.5,0.5)","classID == 1","goff")  # signal
-ROOT.TestTree.Draw("BDT>>hBg(200,-0.5,0.5)","classID == 0", "goff")  # background
-
-ROOT.hSig.SetLineColor(ROOT.kBlue); ROOT.hSig.SetLineWidth(2)  # signal histogram
-ROOT.hBg.SetLineColor(ROOT.kRed); ROOT.hBg.SetLineWidth(2)   # background histogram
-
-# use a THStack to show both histograms
-hs = ROOT.THStack("hs","SUSY Signal (Blue) vs. ttj Background (Red)")
-hs.Add(ROOT.hSig)
-hs.Add(ROOT.hBg)
-hs.Draw()
-
-c1.SaveAs("plots/bdt-separation.png")
-raw_input("Signal-background separation plotted. Press any key to exit.")
