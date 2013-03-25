@@ -14,6 +14,7 @@ def get_pe(event):
   return map(float, splitline(event)[3:7])
 
 # Calculate invariant mass given an energy-momentum 4-vector
+# m^2 = E^2 - p^2 = E^2 - (px^2 + py^2 + pz^2)
 def invariant_mass(pe):
   return sqrt(pe[3]**2 - (pe[0]**2 + pe[1]**2 + pe[2]**2))
 

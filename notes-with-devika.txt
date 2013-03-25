@@ -1,0 +1,55 @@
+already some preprocessing done; something to keep in mind
+  something to keep in mind
+shift, but there is some overlap
+  but that overlap happens by definition
+  depending on where you are in supersymmetric space, the overlap can be really bad
+significance: #(signal)/sqrt(#background)
+
+something to do:
+  do cut and count and see if the line is to the right of the point (mva_bdt_rejBvsS;1)
+
+separation looks too nice for training data
+
+only using 1/20th of the dat
+experimetn:
+  progressively double the size of your data set
+  100, 200, 400, 800, ....
+  see what the trend is in terms of overtraining
+
+the more points you have, the more attuned you are to those specific data points
+change balance between train and test
+  current config: 50% training/50% test
+  another possible config: 80% training/20% on test 
+
+todo:
+  1000 data points and 10000 data points
+  stick with 50/50
+  run PCA and get two most important components
+  email plot to devika
+  color points so background and signal are distinguished
+
+todo:
+  number of trees should be about sqrt of points
+
+show on same plot:
+  where are humans at this?
+  and how well is bdt doing
+  this approach is very similar to medical decision making
+
+suggested future work:
+  change bdt computations
+  not worried about confusion matrix
+
+plot significance vs. number of trees
+normalize all variables?
+  look into documentation and c++ code to see if the normalization is already being done
+
+0. write
+1. compare cut and count
+  100t350_8TeV-51.txt: Efficiency = 3.17%
+  100t400_8TeV-52.txt: Efficiency = 3.83%
+  100t400_8TeV-55.txt: Efficiency = 3.95%
+  100t450_8TeV-51.txt: Efficiency = 3.34%
+  ttj006f38-9.txt: Rejection = 98.26% 
+//2. adjust number of trees
+3. other susy points

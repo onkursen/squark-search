@@ -15,59 +15,44 @@
 
 import ROOT
 from time import strftime, localtime
-import array
+from sys import argv
 
 # ------------------------------------
 # PREPARE DATA TO BE FED INTO BDT
 # ------------------------------------
 
-def to_float_array(filename):
-  return map(float, open(filename).read().split('\n')[:-1])
+susy_source = argv[1]
+ttj_source = argv[2]
 
-# variables used for consideration in BDT
-variables = [
-  'm3a',
-  'm2a',
-  'm3b',
-  'm2b',
-  'angles_b',
-  'angles_j1',
-  'angles_j2',
-  'missing_pT'
-]
+susy = open('bdt_variables-%s.txt' % susy_source).read().split('\n')
+ttj = open('bdt_variables-%s.txt' % ttj_source).read().split('\n')
 
-susy = []; ttj = [];
-for v in variables:
-  susy.append(to_float_array('bdt_variables/bdt_variables-100t400_8TeV-55/%s.txt' % v))
-  ttj.append(to_float_array('bdt_variables/bdt_variables-ttj006f38-9/%s.txt' % v))
+# Remove variables and blank line
+variables = susy.pop(0).split('\t'); susy.pop()
+ttj.pop(0); ttj.pop()
 
-# fill ROOT nTuple with signal and background variables
+print 'Number of SUSY data points from %s: %d' % (susy_source, len(susy))
+print 'Number of TTJ data points from %s: %d' % (ttj_source, len(ttj))
+
+# Fill ROOT nTuple with signal and background variables
 ntuple = ROOT.TNtuple("ntuple","ntuple","%s:signal" % ':'.join(variables))
-print 'Number of SUSY data points: %d' % len(susy[0])
-print 'Number of TTJ data points: %d' % len(ttj[0])
 
-l = min( len(susy[0]),  len(ttj[0]) )
-
-# for i in range(min([len(var) for var in susy])):
-for i in range(l):
-  curr = [var[i] for var in susy] + [1] # susy is signal
+for event in susy:
+  curr = map(float, event.split('\t')) + [1]
   ntuple.Fill(*curr)
 
-# for i in range(min([len(var) for var in ttj])):
-for i in range(l):
-  curr = [var[i] for var in ttj] + [0] # ttbar is background
+for event in ttj:
+  curr = map(float, event.split('\t')) + [0]
   ntuple.Fill(*curr)
 
-print 'NTuple populated.'
-raw_input('press any key to continue')
-
-print 'NTuple prepared to be fed into BDT'
+raw_input('NTuple populated. Press any key to continue.')
 
 # -------------------------------------------------------------------
 # CREATE AND TRAIN BDT USING ROOT TMVA
 # Code taken from: 
 # http://aholzner.wordpress.com/2011/08/27/a-tmva-example-in-pyroot/
 # -------------------------------------------------------------------
+print 'NTuple prepared to be fed into BDT'
 
 fout = ROOT.TFile("test.root","RECREATE")
 
@@ -82,8 +67,7 @@ factory = ROOT.TMVA.Factory(
     "AnalysisType=Classification"]
   ))
 
-for v in variables:
-  factory.AddVariable(v,"F")
+for v in variables: factory.AddVariable(v,"F")
 
 factory.AddSignalTree(ntuple)
 factory.AddBackgroundTree(ntuple)
@@ -111,7 +95,7 @@ method = factory.BookMethod(
   ":".join([
    "!H",
    "!V",
-   "NTrees=850",
+   "NTrees=30", # approximately 1000 events fed to BDT; number of trees should be sqrt(num_events)
    "nEventsMin=150",
    "MaxDepth=3",
    "BoostType=AdaBoost",
@@ -125,7 +109,10 @@ factory.TrainAllMethods()
 factory.TestAllMethods()
 factory.EvaluateAllMethods()
 
-print 'BDTs trained using ROOT TMVA'
+raw_input('BDTs trained using ROOT TMVA in test.root. Press any key to open TBrowser.')
+tb = ROOT.TBrowser()
+raw_input('TBrowser opened. Press any key to close.')
+exit(0)
 
 # ------------------------------------
 # PLOT HISTOGRAM OF SIGNAL VS. BACKGROUND 
@@ -147,32 +134,5 @@ hs.Add(ROOT.hSig)
 hs.Add(ROOT.hBg)
 hs.Draw()
 
-# legend = ROOT.TLegend(0.4,0.6,0.89,0.89);
-# legend.AddEntry(ROOT.hSig,"Signal")
-# legend.AddEntry(ROOT.hBg,"Background")
-# legend.Draw()
-
 c1.SaveAs("plots/bdt-separation.png")
-raw_input("Signal-background separation plotted. Press any key to continue.")
-
-print 'Applying classifier to new instances.'
-reader = ROOT.TMVA.Reader()
-reader_variables = {}
-classify = {}
-
-for v in variables:
-  classify[v] = to_float_array(
-    'bdt_variables/bdt_variables-classify-mix-susy55-ttj8-9/%s.txt' % v
-  )
-  reader_variables[v] = array.array('f',[0])
-  reader.AddVariable(v,reader_variables[v])
-
-reader.BookMVA("BDT", "weights/TMVAClassification_BDT.weights.xml")
-
-outputs = []
-for i in range(len(classify[variables[0]])):
-  for v in variables: reader_variables[v][0] = classify[v][i]
-  bdtOutput = reader.EvaluateMVA("BDT")
-  outputs.append(bdtOutput)
-print ', '.join('%.3f' % o for o in outputs)
-  
+raw_input("Signal-background separation plotted. Press any key to exit.")

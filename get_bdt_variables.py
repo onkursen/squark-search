@@ -18,16 +18,16 @@ from sys import argv
 from time import time
 import os
 
+# Selects two bjj combinations with highest vectorially summed transverse momentum. Returns the combination with a smaller least-squares error from the top quark and W boson.
 def get_best_bjj(bottoms, jets):
-  """
-  Selects two bjj combinations with highest vectorially summed transverse momentum. Returns the combination with a smaller least-squares error from the top quark and W boson.
-  """
+  
   if len(jets) < 2: return None, None, None 
   # ------------------------------------------
   # SELECT TWO bjj GROUPS WITH HIGHEST P_T
   # ------------------------------------------
   
-  first = [0, '', '', '']; second = [0, '', '', ''] # keep track of bjj groups with top two p_t
+  # keep track of bjj groups with top two p_t
+  first = [0, '', '', '']; second = [0, '', '', ''] 
   jet_combos = set(combinations(jets, 2)) # all pairs of jets
 
   for b in bottoms:
@@ -77,23 +77,47 @@ def get_best_bjj(bottoms, jets):
 
 def main():
   M3A = []; M2A = []; M3B = []; M2B = []
-  B_ANGLES = []; J1_ANGLES = []; J2_ANGLES = []; MISSING_E = []
-  enough_bottoms = 0; has_topA = 0; has_topB = 0
+  ANGLES_B_A = []; ANGLES_J1_A = []; ANGLES_J2_A = [];
+  ANGLES_B_B = []; ANGLES_J1_B = []; ANGLES_J2_B = [];
+  MISSING_E = []
+  enough_bottoms = 0; has_topA = 0; has_topB = 0; meets_cuts = 0
+  events_with_params = []
 
   print 'Reading events from source file %s' % argv[1]
   t = time()
   events_by_file = get_jets_from_file(argv[1])
-  print 'Done. Took %f secs.' % (time()-t)
-  print
-  print 'Iterating through %d events.' % len(events_by_file)
+  num_events = len(events_by_file)
+  print 'Done. Took %f secs.\n' % (time()-t)
+  
+  print 'Iterating through %d events.' % num_events
   t = time()
+  
+  variables = [
+    'm3a',              # M3 OF TOP QUARK A
+    'm2a',              # M2 OF TOP QUARK A
+    'angles_b_a',       # AZIMUTHAL ANGLE FOR BOTTOM QUARK A
+    'angles_j1_a',      # AZIMUTHAL ANGLE FOR JET 1 IN SYSTEM A
+    'angles_j2_a',      # AZIMUTHAL ANGLE FOR JET 2 IN SYSTEM A
+    'm3b',              # M3 OF TOP QUARK B
+    'm2b',              # M2 OF TOP QUARK B
+    'angles_b_b',       # AZIMUTHAL ANGLE FOR BOTTOM QUARK B
+    'angles_j1_b',      # AZIMUTHAL ANGLE FOR JET 1 IN SYSTEM B
+    'angles_j2_b',      # AZIMUTHAL ANGLE FOR JET 2 IN SYSTEM B
+    'missing_eT'        # MISSING TRANVERSE ENERGY E_T
+  ]
 
-  for i in range(len(events_by_file)):
+  output = open('bdt_variables-%s' % argv[1].split('/')[-1], 'w')
+  
+  print 'Variables used in BDT processing:'
+  for (i, var) in zip(range(len(variables)), variables):
+    print '%d. %s' % (i+1, var)
+  output.write('\t'.join(variables) + '\n')
+
+
+  for i in range(num_events):
     (events, bottoms, jets) = events_by_file[i]
 
-    if len(bottoms) < 2:
-      # print 'Event %d has too few bottom quarks' % i
-      continue
+    if len(bottoms) < 2: continue   # need one bottom quark for each top quark system
     else: enough_bottoms += 1
 
     # -----------------------------------
@@ -101,21 +125,19 @@ def main():
     # BEST BJJ COMBO FROM REMAINING JETS = TOP QUARK B
     # -----------------------------------
     topA, m31, m21 = get_best_bjj(bottoms, jets);
-    if not topA:
-      continue
+    if not topA: continue
     else: has_topA += 1
 
     # Remove bjj of A from the set of bottoms and jets to consider for system B
     bottoms2 = [x for x in bottoms if x != topA[1]]
     jets2 = [x for x in jets if x not in topA[2:]]
     topB, m32, m22 = get_best_bjj(bottoms2, jets2)
-    if not topB:
-      continue
+    if not topB: continue
     else: has_topB += 1
 
-    # -----------------------------------
-    # AZIMUTHAL ANGLE CUTS
-    # -----------------------------------
+    # ----------------
+    # AZIMUTHAL ANGLES
+    # ----------------
 
     # Sum transverse momentum components of ALL events in collision
     # Theoretically should be 0, but it won't be 
@@ -123,47 +145,43 @@ def main():
 
     # "missing" transverse momentum = negative of sum
     pT_missing = [-1*x for x in pT_file_total]
+    missing_e = norm(pT_missing)
 
     # transverse momentum vector of each in bjj of system B
+    pT_bjjA = [get_pe(topA[k])[:2] for k in range(1, 4)]
     pT_bjjB = [get_pe(topB[k])[:2] for k in range(1, 4)]
 
     # azimuthal angle in between each jet and missing transverse momentum
-    angles = [angle(j, pT_missing) for j in pT_bjjB]
+    anglesA = [angle(j, pT_missing) for j in pT_bjjA]
+    anglesB = [angle(j, pT_missing) for j in pT_bjjB]
 
-    M3A.append(m31)
-    M2A.append(m21)
-    M3B.append(m32)
-    M2B.append(m22)
-    B_ANGLES.append(angles[0])
-    J1_ANGLES.append(angles[1])
-    J2_ANGLES.append(angles[2])
-    MISSING_E.append(norm(pT_missing))
+    output.write(
+      '%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n' %
+      (m31, m21, anglesA[0], anglesA[1], anglesA[2],
+        m32, m22, anglesB[0], anglesB[1], anglesB[2],
+        missing_e)
+    )
 
-  print 'Done. Took %f secs.' % (time()-t)
-  print
-  print 'Total number of events: %d' % len(events_by_file)
-  print 'Number of events with enough bottom quarks: %d' % enough_bottoms
-  print 'Number of events with top quark system A: %d' % has_topA
-  print 'Number of events with top quark system B: %d' % has_topB
+    # if missing_e > 195 and \
+    if missing_e > 145 and \
+    40 <= m21 <= 120 and \
+    120 <= m31 <= 220 and \
+    40 <= m22 <= 120 and \
+    110 <= m32 <= 230 and \
+    anglesB[0] > 1.2 and \
+    min(anglesB[1], anglesB[2]) > 0.7:
+      meets_cuts += 1
 
-  # ------------------------------------------------------
-  # OUTPUT VALUES TO FILES FOR ROOT PLOTTING
-  # ------------------------------------------------------
-  print
-  print 'Outputing variables for BDT processing:'
-  variables = ['m3a', 'm2a', 'm3b', 'm2b', 'angles_b', 'angles_j1', 'angles_j2', 'missing_pT']
-  for (i, var) in zip(range(len(variables)), variables):
-    print '%d. %s' % (i+1, var)
+  output.close()
+  print 'Done. Took %f secs.\n' % (time()-t)
 
-  if not os.path.isdir('bdt_variables'): os.system('mkdir bdt_variables')
-  write_array_to_file('bdt_variables/m3a.txt', M3A)                 # 1. M3 OF TOP QUARK A
-  write_array_to_file('bdt_variables/m3b.txt', M3B)                 # 2. M2 OF TOP QUARK A
-  write_array_to_file('bdt_variables/m2a.txt', M2A)                 # 3. M3 OF TOP QUARK B
-  write_array_to_file('bdt_variables/m2b.txt', M2B)                 # 4. M2 OF TOP QUARK B
-  write_array_to_file('bdt_variables/angles_b.txt', B_ANGLES)       # 5. AZIMUTHAL ANGLES FOR BOTTOM QUARK B
-  write_array_to_file('bdt_variables/angles_j1.txt', J1_ANGLES)     # 6. AZIMUTHAL ANGLES FOR JET 1 IN SYSTEM B
-  write_array_to_file('bdt_variables/angles_j2.txt', J2_ANGLES)     # 7. AZIMUTHAL ANGLES FOR JET 2 IN SYSTEM B
-  write_array_to_file('bdt_variables/missing_pT.txt', MISSING_E)    # 8. MISSING TRANVERSE ENERGY E_T
+  print 'Total number of events:', num_events
+  print 'Number of events with enough bottom quarks:', enough_bottoms
+  print 'Number of events with top quark system A:', has_topA
+  print 'Number of events with top quark system B:', has_topB
+  print 'Number of events that passed through cuts:', meets_cuts
+  eff = meets_cuts * 100.0 / num_events
+  print 'Efficiency = %2.2f%%, Rejection = %2.2f%%\n' % (eff, 100-eff)
 
 if __name__ == "__main__":
   main()

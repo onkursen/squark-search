@@ -153,3 +153,8 @@ March 13, 2013:
 	look at different susy points
 	consider their cut and count method
 	plot on the root plots all on one plot
+
+March 22, 2013:
+	get more background points!
+	get root objects from plots
+	match background rejection and check signal efficiency
