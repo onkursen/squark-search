@@ -9,8 +9,10 @@ from itertools import combinations
 from math import sqrt
 from sys import argv
 from time import time
+import os
 
-# **Selects two bjj combinations with highest vectorially summed transverse momentum. Returns the combination with a smaller least-squares error from the top quark and W boson.**
+# **Selects two bjj combinations maximizing transverse momentum.**
+# **Returns combination that minimizes mass error of top quark and W boson.**
 def get_best_bjj(bottoms, jets):
   
   # Need at least two untagged jets for a top quark system
@@ -66,7 +68,7 @@ def get_best_bjj(bottoms, jets):
   return second, M3_2, M2_2
 
 def main():
-  enough_bottoms = 0
+  meets_baseline_cuts = 0
   has_topA = 0
   has_topB = 0
   meets_cuts = 0
@@ -91,25 +93,35 @@ def main():
     'angles_b_b',   # AZIMUTHAL ANGLE FOR BOTTOM QUARK IN SYSTEM B
     'angles_j1_b',  # AZIMUTHAL ANGLE FOR JET 1 IN SYSTEM B
     'angles_j2_b',  # AZIMUTHAL ANGLE FOR JET 2 IN SYSTEM B
-    # 'mT_b',         # INVARIANT TRANSVERSE MASS OF BOTTOM QUARK B AND MISSING ENERGY
-    'missing_eT'    # MISSING TRANVERSE ENERGY
+    'mT_b',         # INVARIANT TRANSVERSE MASS OF BOTTOM QUARK B AND MISSING ENERGY
+    'eT_missing'    # MISSING TRANVERSE ENERGY
   ]
 
   # Output buffer
-  output = open('bdt_variables-%s' % argv[1].split('/')[-1], 'w')
+  if not os.path.isdir('bdt_variables'): os.system('mkdir bdt_variables')
+  output = open('bdt_variables/%s' % argv[1].split('/')[-1], 'w')
   output.write('\t'.join(variables) + '\n')
 
-  for i in range(num_events):
-    (events, bottoms, jets) = events_by_file[i]
+  for events, bottoms, jets in events_by_file:
 
+    # Sum of transverse momentum components of ALL events in collision
+    # Theoretically should be 0, but it won't be 
+    pT_file_total = sumzip([get_pe(event) for event in events])[:2]
+
+    # "Missing" transverse momentum = negative of sum
+    pT_missing = [-1*x for x in pT_file_total]
+    eT_missing = norm(pT_missing)
+
+    # Baseline cuts
     # Need one bottom quark for each top quark system
-    if len(bottoms) < 2: continue   
-    else: enough_bottoms += 1
+    # Missing E_T > 100
+    if len(bottoms) < 2 or eT_missing <= 100: continue
+    meets_baseline_cuts += 1
 
     # Best bjj combo = top quark A
     topA, m31, m21 = get_best_bjj(bottoms, jets);
     if not topA: continue
-    else: has_topA += 1
+    has_topA += 1
 
     # Remove bjj of A from the set of bottoms and jets to consider for system B
     bottoms.remove(topA[1])
@@ -119,50 +131,35 @@ def main():
     # Best remaining bjj combo = top quark B
     topB, m32, m22 = get_best_bjj(bottoms, jets)
     if not topB: continue
-    else: has_topB += 1
+    has_topB += 1
 
     # ### AZIMUTHAL ANGLES
-
-    # Sum of transverse momentum components of ALL events in collision
-    # Theoretically should be 0, but it won't be 
-    pT_file_total = sumzip([get_pe(event) for event in events])[:2]
-
-    # "Missing" transverse momentum = negative of sum
-    pT_missing = [-1*x for x in pT_file_total]
-    missing_e = norm(pT_missing)
 
     # Transverse momentum vector of each in bjj of system B
     pT_bjjA = [get_pe(topA[k])[:2] for k in range(1, 4)]
     pT_bjjB = [get_pe(topB[k])[:2] for k in range(1, 4)]
+    ET_b = norm(pT_bjjB[0])
 
     # Invariant mass from p_t of bottom quarks and missing energy
-    mT_B = pT_missing[0]**2 + pT_missing[1]**2 + \
-            pT_bjjB[0][0]**2 + pT_bjjB[0][1]**2 - \
-            (pT_missing[0]**2 + pT_bjjB[0][0]**2) - \
-            (pT_missing[1]**2 + pT_bjjB[0][1]**2)
+    mT_B = (eT_missing + ET_b)**2 - \
+            (pT_missing[0] + pT_bjjB[0][0])**2 - \
+            (pT_missing[1] + pT_bjjB[0][1])**2
 
     # Azimuthal angle between each jet and missing transverse momentum
     anglesA = [angle(j, pT_missing) for j in pT_bjjA]
     anglesB = [angle(j, pT_missing) for j in pT_bjjB]
 
     # Output variable values to buffer
-    output.write(
-      '%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n' %
-      (m31, m21, anglesA[0], anglesA[1], anglesA[2], 
-        m32, m22, anglesB[0], anglesB[1], anglesB[2], #mT_B, 
-        missing_e
-      )
-    )
+    outstring = '%f\t' * (len(variables)-1) + '%f\n'
+    output.write(outstring % (m31, m21, anglesA[0], anglesA[1], anglesA[2], 
+        m32, m22, anglesB[0], anglesB[1], anglesB[2], mT_B, eT_missing))
 
     # Cut and count as proposed by Dutta et. al.
     
-    # if missing_e > 195 and \
-    if missing_e > 145 and \
-    40 <= m21 <= 120 and \
-    120 <= m31 <= 220 and \
-    40 <= m22 <= 120 and \
-    110 <= m32 <= 230 and \
-    anglesB[0] > 1.2 and \
+    # if eT_missing > 195 and \
+    if eT_missing > 145 and 40 <= m21 <= 120 and \
+    120 <= m31 <= 220 and 40 <= m22 <= 120 and \
+    110 <= m32 <= 230 and anglesB[0] > 1.2 and \
     min(anglesB[1], anglesB[2]) > 0.7:
       meets_cuts += 1
 
@@ -170,7 +167,7 @@ def main():
   print 'Done. Took %f secs.\n' % (time()-t)
 
   print 'Total number of events:', num_events
-  print 'Number of events with enough bottom quarks:', enough_bottoms
+  print 'Number of events that pass baseline cuts:', meets_baseline_cuts
   print 'Number of events with top quark system A:', has_topA
   print 'Number of events with top quark system B:', has_topB
   print 'Number of events that passed through cuts:', meets_cuts

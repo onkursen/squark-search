@@ -158,3 +158,11 @@ March 22, 2013:
 	get more background points!
 	get root objects from plots
 	match background rejection and check signal efficiency
+
+March 25, 2013:
+	//Add baseline cuts that aren't there
+	IMPORTANT: get list of number of events classified past 0, 0.2, 0.3, 0.4, 0.5 for both signal and background (see MVA_BDT_effB)
+		don't use normalized values; try and obtain raw numbers (i.e., ideally from a histogram)
+		 = number that passed BDT cuts
+	Compare cuts to theory
+		Baseline cuts and final after all cuts
