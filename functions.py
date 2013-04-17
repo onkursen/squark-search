@@ -1,4 +1,4 @@
-from math import sqrt, acos
+from math import sqrt, acos, log, tan
 
 # Splits event into individual entries to be parsed
 def splitline(line):
@@ -13,10 +13,18 @@ def sumzip(list):
 def get_pe(event):
   return map(float, splitline(event)[3:7])
 
+def get_pT(event):
+  return norm(get_pe(event)[:2])
+
 # Calculate invariant mass given an energy-momentum 4-vector
 # m^2 = E^2 - p^2 = E^2 - (px^2 + py^2 + pz^2)
 def invariant_mass(pe):
   return sqrt(pe[3]**2 - (pe[0]**2 + pe[1]**2 + pe[2]**2))
+
+# Calculate pseudorapidity
+def pseudorapidity(event):
+  pe = get_pe(event)
+  return -1.0*log(tan(0.5 * abs(acos(pe[2]/pe[3]))))
 
 # For now, calculate RMS error from mass of top quark and W boson
 def top_W_error(M3, M2):
@@ -53,7 +61,6 @@ def get_jets_from_file(filename):
 
   for f in all_files:
     # READ RECOS AND GET 1 EVENT PER LINE
-
     events = []; curr_event = []
     for line in f:
       # ignore BeginReco/EndReco or line w/ number of events

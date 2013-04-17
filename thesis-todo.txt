@@ -166,3 +166,10 @@ March 25, 2013:
 		 = number that passed BDT cuts
 	Compare cuts to theory
 		Baseline cuts and final after all cuts
+
+
+March 27, 2013:
+	make a table of EACH BASELINE CUT and see how many are getting through
+	atm, 30000 => 10000
+	but theorists have 10^5 => 147
+	check out the -1's on the BDT
