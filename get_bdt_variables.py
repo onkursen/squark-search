@@ -136,15 +136,15 @@ def main():
     if pT_rapidity == [] or max(pT_rapidity) < 100 or min(pT_rapidity) < 30: continue
     cuts[1] += 1
 
-    # # Baseline cut (iii): reject electrons/muons with pT > 10 GeV in \eta <= 2.5
-    # electron_muon_rapidity = [
-    #   get_pT(event)
-    #   for event in events
-    #   if ((splitline(event)[2] == '1' and float(splitline(event)[15]) < 5) # ptiso < 5
-    #   or (splitline(event)[2] == '2' and float(splitline(event)[13]) < 5))
-    #   and pseudorapidity(event) <= 2.5
-    # ]
-    # if electron_muon_rapidity == [] or max(electron_muon_rapidity) > 10: continue
+    # Baseline cut (iii): reject electrons/muons with pT > 10 GeV in \eta <= 2.5
+    electron_muon_rapidity = [
+      (get_pT(event) > 10)
+      for event in events   
+      if ((splitline(event)[2] == '1' and float(splitline(event)[15]) < 5) # electron, ptiso-pttrk < 5
+      or (splitline(event)[2] == '2' and float(splitline(event)[13]) < 5)) # electron, ptiso < 5
+      and pseudorapidity(event) <= 2.5
+    ]
+    if electron_muon_rapidity == [] or any(electron_muon_rapidity): continue
     cuts[2] += 1
 
     # Baseline cut (iv): reject taus with pT > 20 GeV in \eta <= 2.1
