@@ -106,11 +106,6 @@ def main():
   output.write('\t'.join(variables) + '\n')
 
   for events, bottoms, jets in events_by_file:
-    # for event in events:
-    #   if splitline(event)[2] == '1':
-    #     raw_input('\n'.join(splitline(event)))
-      # if splitline(event)[2] == '3':
-      #   raw_input('\n'.join(splitline(event)))
 
     # Sum of transverse momentum components of ALL events in collision
     # Theoretically should be 0, but it won't be
@@ -139,7 +134,7 @@ def main():
     # Baseline cut (iii): reject electrons/muons with pT > 10 GeV in \eta <= 2.5
     electron_muon_rapidity = [
       (get_pT(event) > 10)
-      for event in events   
+      for event in events
       if ((splitline(event)[2] == '1' and float(splitline(event)[15]) < 5) # electron, ptiso-pttrk < 5
       or (splitline(event)[2] == '2' and float(splitline(event)[13]) < 5)) # electron, ptiso < 5
       and pseudorapidity(event) <= 2.5
@@ -149,7 +144,6 @@ def main():
 
     # Baseline cut (iv): reject taus with pT > 20 GeV in \eta <= 2.1
     tau_rapidity = [
-      # get_pT(event)
       float(splitline(event)[13])
       for event in events
       if splitline(event)[2] == '3'
@@ -212,9 +206,10 @@ def main():
 
   print 'Total number of events:', num_events
   print 'Sequential baseline cuts:', cuts
+  print 'Efficiency of baseline cuts = %2.5f%%' % (100.0 * cuts[-1] / num_events)
   print 'Number of events with top quark system A:', has_topA
   print 'Number of events with top quark system B:', has_topB
-  print 'Number of events that passed through cuts:', meets_all_cuts
+  print 'Number of events that passed through all cuts:', meets_all_cuts
   eff = meets_all_cuts * 100.0 / num_events
   print 'Efficiency = %2.5f%%, Rejection = %2.5f%%\n' % (eff, 100-eff)
 
