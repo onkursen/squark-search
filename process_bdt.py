@@ -29,23 +29,33 @@ ttj = open(ttj_source).read().split('\n')
 variables = susy.pop(0).split('\t'); susy.pop()
 ttj.pop(0); ttj.pop()
 
-ttj = ttj[:len(susy)]
-
 print 'Number of SUSY data points from %s: %d' % (susy_source, len(susy))
 print 'Number of TTJ data points from %s: %d' % (ttj_source, len(ttj))
 
+# Make trees the same length
+if len(ttj) > len(susy):
+  ttj = ttj[:len(susy)]
+  print 'SUSY is limiting'
+else:
+  susy = susy[:len(ttj)]
+  print 'TTJ is limiting'
+
 # Number of decision trees should be on the order of sqrt(number of events)
-numTrees = int(min(len(susy), len(ttj))**0.5)
+numTrees = int(len(susy)**0.5)
 print 'Number of decision trees used in BDT: %d\n' % numTrees
 
 # Fill ROOT nTuple
 ntuple = ROOT.TNtuple('ntuple','ntuple','%s:signal' % ':'.join(variables))
 
 for event in susy:
-  ntuple.Fill(*(map(float, event.split('\t')) + [1]))
+  ntuple.Fill(*(map(float, event.split()) + [1]))
 
 for event in ttj:
-  ntuple.Fill(*(map(float, event.split('\t')) + [0]))
+  # s = event.split()
+  # print s
+  # for e in s:
+  #   raw_input(float(e))
+  ntuple.Fill(*(map(float, event.split()) + [0]))
 
 raw_input('NTuple populated with signal and background events. Press any key to continue.')
 
@@ -83,18 +93,16 @@ factory.AddBackgroundTree(ntuple)
 sigCut = ROOT.TCut('signal > 0.5')
 bgCut = ROOT.TCut('signal <= 0.5')
 
+# options = ['testonSignalOnly', 'testonBackgroundOnly', 'testBoth']
+# option = 2
 
-
-options = ['testonSignalOnly', 'testonBackgroundOnly', 'testBoth']
-option = 1
-
-# default: test both
 train_test = 'nTrain_Signal=0:nTrain_Background=0'
-if option == 0:
-  train_test = 'nTrain_Signal=0:nTrain_Background=%d' % len(ttj)
-elif option == 1:
-  train_test = 'nTrain_Signal=%d:nTrain_Background=0' % len(susy)
-
+# fraction_train = len(susy)/3
+# train_test = 'nTrain_Signal=%d:nTrain_Background=%d' % (fraction_train, fraction_train)
+# if option == 0:
+#   train_test = 'nTrain_Signal=0:nTrain_Background=%d' % len(ttj)
+# elif option == 1:
+#   train_test = 'nTrain_Signal=%d:nTrain_Background=0' % len(susy)
 
 factory.PrepareTrainingAndTestTree(
   sigCut,   # signal events
@@ -112,7 +120,8 @@ method = factory.BookMethod(
   ':'.join([
    'H',
    '!V',
-   'NTrees=%d' % numTrees,
+   # 'NTrees=%d' % numTrees,
+   'NTrees=%d' % 70,
    'AdaBoostBeta=0.5',
    # 'PruneMethod=NoPruning',
    'nEventsMin=100',
