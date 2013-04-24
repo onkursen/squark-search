@@ -36,8 +36,6 @@
 	<body>
 
 		<div class="reveal">
-
-			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 
 				<section data-markdown>
@@ -82,7 +80,8 @@
 							* Gluinos and heavier stop quarks cannot be detected
 						* No supersymmetric particle has been discovered yet!
 							* Searching in the dark
-							* Not clear that you can ever rule out supersymmetry
+						* Not clear that you can ever rule out supersymmetry
+							* As a result of Higgs experiment, stop quarks are favored to exist
 					</section>
 
 					<section>
@@ -117,31 +116,51 @@
 							<li>Make a yes/no decision based on many factors</li>
 							<li>Think flowcharts</li>
 						</ul>
-						<img src='http://imgs.xkcd.com/comics/flow_charts.png' width='500' height='360'>
+						<table><tr>
+								<td width="450">
+									<img src='http://imgs.xkcd.com/comics/flow_charts.png' width='750' height='540'>
+								</td>
+								<td width="450" style="text-align:right;">
+									<img src='images/bishop-tree.png'>
+								</td>
+						</tr></table>
 					</section>
 
 					<section data-markdown>
 						## Boosting
 
 						* Combine many weak learners to make a strong learner
-						* This is a form of **supervised learning**: train on data for which the result is known, then apply to new data
+							* Ex: "rules of thumb"
+						* **Supervised learning**: train on data for which the result is known, then apply to new data
 						* AdaBoost (adaptive boosting): most common boosting algorithm
-						<!-- TODO talk more about AdaBoost -->
 
 						### Our approach:
 						### Boosted decision trees
 						### (BDTs)
 					</section>
-
+				</section>
+				<section>
 					<section data-markdown>
 						## Context 
+					</section>
+					<section data-markdown>
+						### Theoretical Basis
+						* [Dutta et al.](http://prd.aps.org/abstract/PRD/v86/i7/e075004) (Texas A&amp;M): proposed search mechanism for stop quarks
+							* DOI: 10.1103/PhysRevD.86.075004
+							* Provide phenomenological data that simulates stop quark decays
+						* Them: Iteratively cut on multiple variables to separate signal from background
+						* Us: use variables as parameters in BDT
+					</section>
+					<section data-markdown>
+						### Experimental Considerations
 						* In our case, data = **jets**
 							* Representation of collision result
-							* One jet = one final particle
-						* BDTs have been particularly good for Higgs searches among other CMS analyses
-						* Phenomenological data from [Dutta et. al.](http://prd.aps.org/abstract/PRD/v86/i7/e075004) provides a proposed search mechanism for squarks
-							* We are extending using BDTs
-							* Use variables detailed in paper as checkpoints for learning
+							* 1 jet = 1 final particle
+						* [PGS4](http://www.physics.ucdavis.edu/~conway/research/software/pgs/pgs4-general.htm)
+							* Translating data from PYTHIA to objects and jets
+							* Creates objects by simulating the detector
+						* BDTs particularly good for Higgs searches
+							* Framework: [ROOT TMVA](http://tmva.sourceforge.net/)
 					</section>
 				</section>
 
@@ -150,18 +169,23 @@
 						<h2>Outline of Approach</h2>
 					</section>
 
-		 			<section data-markdown>
-						## Getting acquainted
-
-						* Received phenomenological data from [Dutta](http://people.physics.tamu.edu/dutta/) et. al. (Texas A&amp;M)
-						* [PGS4](http://www.physics.ucdavis.edu/~conway/research/software/pgs/pgs4-general.htm)
-							* Translating data from PYTHIA to objects and jets
-							* Creates objects by simulating the detector
-						* Used [PYTHIA](http://home.thep.lu.se/~torbjorn/Pythia.html) and [ROOT](http://root.cern.ch/drupal/) to do basic data analysis on particle collisions
-						* Isolated jets and observed energy distribution
+		 			<section>
+		 				<div data-markdown>
+							## Getting acquainted
+							* Used [PYTHIA](http://home.thep.lu.se/~torbjorn/Pythia.html) and [ROOT](http://root.cern.ch/drupal/) to do basic data analysis on particle collisions
+							* Isolated jets and observed energy distribution
+						</div>
+						<br>
+						<table><tr>
+								<td width="450">
+									SUSY<img src='images/energy_100t400_8TeV-52.png' width='450' height='450'>
+								</td>
+								<td width="450" style="text-align:right;">
+									TTJ<img src='images/energy_ttj006.png' width='450' height='450'>
+								</td>
+						</tr></table>
 					</section>
 
-					<!-- TODO better slide title -->
 					<section>
 						<h2>Defining Desired Parameters</h2>
 						<ul>
@@ -218,7 +242,6 @@
 					<section data-markdown>
 						## BDT implementation
 						
-						* Package: [ROOT TMVA](http://tmva.sourceforge.net/)
 						* Variables/factors considered
 							* M3 of top quark A
 							* M3 of top quark B
@@ -226,6 +249,7 @@
 							* M2 of top quark B
 							* Tranverse momentum azimuthal angle of bottom quark
 							* Tranverse momentum azimuthal angle of 2 jets
+							* Missing transverse energy
 						* Train with SUSY as signal, ttj as background
 					</section>
 				</section>
@@ -273,21 +297,59 @@
 				</section>
 
 				<section>
+					<section>
+						<h2>BDT Results</h2>
+					</section>
+					<section>
+						<h3>Classification of Signal and Background</h3>
+						<table><tr>
+								<td width="450">
+									Signal<img src='images/MVA_BDT_S.png' width='450' height='450'>
+								</td>
+								<td width="450" style="text-align:right;">
+									Background<img src='images/MVA_BDT_B.png' width='450' height='450'>
+								</td>
+						</tr></table>
+					</section>
+					<section>
+						<h3>BG Rejection vs. SIG Efficiency</h3>
+						<table><tr>
+								<img src='images/MVA_BDT_rejBvsS.png' width='800' height='800'>
+						</tr></table>
+						<h4>Better than cut and count!</h4>
+					</section>
+					<section>
+						<h3>Test vs. Training</h3>
+						<table><tr>
+								<td width="450">
+									Test<img src='images/MVA_BDT_rejBvsS.png' width='450' height='450'>
+								</td>
+								<td width="450" style="text-align:right;">
+									Training<img src='images/MVA_BDT_trainingRejBvsS.png' width='450' height='450'>
+								</td>
+						</tr></table>
+						<h4>We're not overtraining!</h4>
+					</section>
+
+				</section>
+
+				<!-- <section>
 					<h2>Signal-Background Separation</h2>
 					<p>
 						Possibility of separation through cuts
 					</p>
 					<img src='images/bdt-separation2.png' width='440' height='440'>
-				</section>
+				</section> -->
 
 				<section data-markdown>
-					## Remaining tasks
+					## Future work
 
-					* Use trained BDT to classify events from phenomenological data
-						* Measure performance on signal, background, and mix
+					* Larger data sets to corroborate results
+					* Test multiple SUSY points
 					* Examine individual decision trees more precisely to determine viability of approach
-						* Don't want to use them blindly
+					* Fine tuning in efficiency
 				</section>
+
 				<section data-markdown>
 					## Potential
 					
@@ -296,7 +358,16 @@
 					* Strongly suggest the evidence of a supersymmetric particle
 					* Detect it now within the current parameter space
 					* Provide a possible partial solution to the fine-tuning problem in the Higgs context
-					</section>
+				</section>
+
+				<section data-markdown>
+					## Acknowledgments
+					
+					* Dr. Paul Padley
+					* Kuver Sinha and Bhaskar Dutta
+					* Robert Brockman
+					* Family, friends
+				</section>
 					
 			</div>
 			<!-- TODO add acknowledgments -->
